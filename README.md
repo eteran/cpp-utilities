@@ -10,7 +10,8 @@ Usage is **very** simple:
     // create an arena of 1024 64-bit blocks 
     auto arena = arena::make_arena<uint64_t, 1024>();
     auto p1 = arena.allocate(); // get a single uint64_t sized block
-    arena.release(p1);          // free that block back into the system (once again not necessary, the arena will clean itself up)
+    arena.release(p1);          // free that block back into the system 
+                                // (once again not necessary, the arena will clean itself up)
     
 On my system , the allocate function when using the freelist strategy, allocate was **as few a 6 instructions**. Some of which were simple `nullptr` checks.
 
