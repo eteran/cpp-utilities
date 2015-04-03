@@ -11,7 +11,7 @@ Usage is **very** simple:
     auto arena = arena::make_arena<uint64_t, 1024>();
     auto p1 = arena.allocate(); // get a single uint64_t sized block
     arena.release(p1);          // free that block back into the system 
-                                // (once again not necessary, the arena will clean itself up)
+                                // (not necessary, the arena will clean itself up)
     
 On my system , the allocate function when using the freelist strategy, allocate was **as few a 6 instructions**. Some of which were simple `nullptr` checks.
 
@@ -27,5 +27,10 @@ Found in `bitset.hpp`. This header provides a nice utility function to find the 
 The function is defined to return `bitset.size()` when no bits are set, this is similar to containers returning `.end()` for find operations.
 
 ### Bitwise Operations
+
+`bitwise.hpp` provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution.
+
+    int x = 5;
+    int y = bitwise::rotate_right(15);
 
 ### String Utility Functions
