@@ -3,9 +3,13 @@
 #define UTILITIES_STRING_HPP_
 
 #include <algorithm>
-#include <string>
-#include <limits>
 #include <cctype>
+#include <iostream>
+#include <iterator>
+#include <limits>
+#include <sstream>
+#include <string>
+#include <vector>
 
 namespace string {
 
@@ -255,6 +259,26 @@ inline std::vector<std::string> explode(char delimeter, const std::string &strin
 //------------------------------------------------------------------------------
 inline std::vector<std::string> explode(char delimeter, const std::string &string) {
 	return explode(delimeter, string, std::numeric_limits<int>::max());
+}
+
+//------------------------------------------------------------------------------
+// Name: split
+//------------------------------------------------------------------------------
+template <class Op>
+void split(const std::string &s, char delim, Op op) {
+	std::stringstream ss(s);
+	for(std::string item; std::getline(ss, item, delim); ) {
+		*op++ = item;
+	}
+}
+
+//------------------------------------------------------------------------------
+// Name: split
+//------------------------------------------------------------------------------
+inline std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, std::back_inserter(elems));
+    return elems;
 }
 
 }
