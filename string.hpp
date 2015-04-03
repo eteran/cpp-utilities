@@ -177,7 +177,7 @@ inline std::vector<std::string> explode(const std::string &delimeter, const std:
 			size_t last  = string.find(delimeter);
 
 			while(last != std::string::npos) {
-				r.push_back(string.substr(first, last - first));
+				r.emplace_back(string.substr(first, last - first));
 				first = last + delimeter.size();
 				last  = string.find(delimeter, last + delimeter.size());
 			}
@@ -233,7 +233,7 @@ inline std::vector<std::string> explode(char delimeter, const std::string &strin
 			size_t last  = string.find(delimeter);
 
 			while(last != std::string::npos) {
-				r.push_back(string.substr(first, last - first));
+				r.emplace_back(string.substr(first, last - first));
 				first = last + 1;
 				last  = string.find(delimeter, last + 1);
 			}
