@@ -17,7 +17,7 @@ On my system , the allocate function when using the freelist strategy, allocate 
 
 ### Bitset Utility Functions
 
-Found in `bitset.hpp`. This header provides a nice utility function to find the first set bit in a bitset. When possible using GCC intrinsics to do it in O(1) time, but falling back on an iterative implementation when this is not possible.
+Found in [bitset.hpp](https://github.com/eteran/cpp-utilities/blob/master/bitset.hpp). This header provides a nice utility function to find the first set bit in a bitset. When possible using GCC intrinsics to do it in O(1) time, but falling back on an iterative implementation when this is not possible.
 
     std::bitset<32> bs;
     bs[4] = true;
@@ -28,7 +28,7 @@ The function is defined to return `bitset.size()` when no bits are set, this is 
 
 ### Bitwise Operations
 
-`bitwise.hpp` provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution.
+[bitwise.hpp](https://github.com/eteran/cpp-utilities/blob/master/bitwise.hpp) provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution.
 
     int x = 5;
     int y = bitwise::rotate_right(x, 15);
