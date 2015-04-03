@@ -34,7 +34,7 @@ public:
 		other.storage_  = nullptr;
 	}
 	
-	arena_allocator &operator=(arena_allocator &rhs) noexcept {
+	arena_allocator &operator=(arena_allocator &&rhs) noexcept {
 		if(this != &rhs) {
 			storage_      = rhs.storage_;
 			freelist_     = rhs.freelist_;
@@ -109,7 +109,7 @@ public:
 		other.freelist_ = nullptr;
 	}
 	
-	arena_allocator &operator=(arena_allocator &rhs) noexcept {
+	arena_allocator &operator=(arena_allocator &&rhs) noexcept {
 		if(this != &rhs) {
 			storage_      = rhs.storage_;
 			freelist_     = rhs.freelist_;
