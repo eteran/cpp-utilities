@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <string>
+#include <limits>
 #include <cctype>
 
 namespace string {
@@ -110,6 +111,150 @@ inline std::string toupper_copy(std::string s) {
 inline std::string tolower_copy(std::string s) {
 	tolower(s);
 	return s;
+}
+
+//------------------------------------------------------------------------------
+// Name: implode
+// Desc: join elements with a char
+//------------------------------------------------------------------------------
+inline std::string implode(char glue, const std::vector<std::string> &pieces) {
+	std::string s;
+	if(!pieces.empty()) {
+		s.append(pieces[0]);
+		for(size_t i = 1; i < pieces.size(); ++i) {
+			s.push_back(glue);
+			s.append(pieces[i]);
+		}
+	}
+	return s;
+}
+
+//------------------------------------------------------------------------------
+// Name: implode
+// Desc: join elements with a string
+//------------------------------------------------------------------------------
+inline std::string implode(const std::string &glue, const std::vector<std::string> &pieces) {
+	std::string s;
+	if(!pieces.empty()) {
+		s.append(pieces[0]);
+		for(size_t i = 1; i < pieces.size(); ++i) {
+			s.append(glue);
+			s.append(pieces[i]);
+		}
+	}
+	return s;
+}
+
+//------------------------------------------------------------------------------
+// Name: explode
+//------------------------------------------------------------------------------
+inline std::vector<std::string> explode(const std::string &delimeter, const std::string &string, int limit) {
+	std::vector<std::string> r;
+
+	if(!string.empty()) {
+		if(limit >= 0) {
+			if(limit == 0) {
+				limit = 1;
+			}
+
+			size_t first = 0;
+			size_t last  = string.find(delimeter);
+
+			while(last != std::string::npos) {
+
+				if(--limit == 0) {
+					break;
+				}
+
+				r.emplace_back(string.substr(first, last - first));
+				first = last + delimeter.size();
+				last  = string.find(delimeter, last + delimeter.size());
+			}
+
+			r.emplace_back(string.substr(first));
+		} else {
+			size_t first = 0;
+			size_t last  = string.find(delimeter);
+
+			while(last != std::string::npos) {
+				r.push_back(string.substr(first, last - first));
+				first = last + delimeter.size();
+				last  = string.find(delimeter, last + delimeter.size());
+			}
+
+			r.emplace_back(string.substr(first));
+			
+			while(limit < 0) {
+				r.pop_back();
+				++limit;
+			}
+		}
+	}
+	
+	return r;
+}
+
+//------------------------------------------------------------------------------
+// Name: explode
+//------------------------------------------------------------------------------
+inline std::vector<std::string> explode(const std::string &delimeter, const std::string &string) {
+	return explode(delimeter, string, std::numeric_limits<int>::max());
+}
+
+//------------------------------------------------------------------------------
+// Name: explode
+//------------------------------------------------------------------------------
+inline std::vector<std::string> explode(char delimeter, const std::string &string, int limit) {
+	std::vector<std::string> r;
+
+	if(!string.empty()) {
+		if(limit >= 0) {
+			if(limit == 0) {
+				limit = 1;
+			}
+
+			size_t first = 0;
+			size_t last  = string.find(delimeter);
+
+			while(last != std::string::npos) {
+
+				if(--limit == 0) {
+					break;
+				}
+
+				r.emplace_back(string.substr(first, last - first));
+				first = last + 1;
+				last  = string.find(delimeter, last + 1);
+			}
+
+			r.emplace_back(string.substr(first));
+		} else {
+			size_t first = 0;
+			size_t last  = string.find(delimeter);
+
+			while(last != std::string::npos) {
+				r.push_back(string.substr(first, last - first));
+				first = last + 1;
+				last  = string.find(delimeter, last + 1);
+			}
+
+			r.emplace_back(string.substr(first));
+			
+			while(limit < 0) {
+				r.pop_back();
+				++limit;
+			}
+		}
+	}
+	
+	return r;
+}
+
+//------------------------------------------------------------------------------
+// Name: explode
+//------------------------------------------------------------------------------
+inline std::vector<std::string> explode(char delimeter, const std::string &string) {
+	return explode(delimeter, string, std::numeric_limits<int>::max());
 }
 
 }
