@@ -31,6 +31,7 @@ The function is defined to return `bitset.size()` when no bits are set, this is 
 `bitwise.hpp` provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution.
 
     int x = 5;
-    int y = bitwise::rotate_right(15);
+    int y = bitwise::rotate_right(x, 15);
+    int x = bitwise::rotate_left(x, 20);
 
 ### String Utility Functions
