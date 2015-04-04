@@ -20,9 +20,10 @@ On my system , the allocate function when using the freelist strategy, allocate 
 Found in [bitset.hpp](https://github.com/eteran/cpp-utilities/blob/master/bitset.hpp). This header provides a nice utility function to find the first set bit in a bitset. When possible using GCC intrinsics to do it in O(1) time, but falling back on an iterative implementation when this is not possible.
 
     std::bitset<32> bs;
-    bs[4] = true;
+    bs[4]  = true;
     bs[10] = true;
-    int bit = bitset::find_first(bs); // returns 4
+    int bit_l = bitset::find_first(bs); // returns 4
+	int bit_h = bitset::find_last(bs); // returns 10
     
 The function is defined to return `bitset.size()` when no bits are set, this is similar to containers returning `.end()` for find operations.
 
