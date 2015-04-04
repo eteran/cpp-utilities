@@ -35,3 +35,5 @@ The function is defined to return `bitset.size()` when no bits are set, this is 
     int x = bitwise::rotate_left(x, 20);
 
 ### String Utility Functions
+
+[string.hpp](https://github.com/eteran/cpp-utilities/blob/master/string.hpp) provides several common string functions such as trimming, upper/lower casing, testing what it starts and ends with, etc.
