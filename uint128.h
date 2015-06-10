@@ -20,11 +20,11 @@
 #include <string>
 #include <iostream>
 #include <climits>
+#include <cstdint>
 
-#include <boost/config.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/operators.hpp>
-#include <boost/cstdint.hpp> // for uint64_t
+
+namespace numeric {
 
 namespace {
 template <typename T>
@@ -95,7 +95,7 @@ public:
 			int radix = 10;
 			bool minus = false;
 
-			std::string::const_iterator i = sz.begin();
+			auto i = sz.begin();
 
 			// check for minus sign, i suppose technically this should only apply
 			// to base 10, but who says that -0x1 should be invalid?
@@ -411,5 +411,7 @@ std::ostream &operator<<(std::ostream &o, const uint128 &n) {
 }
 
 typedef uint128 uint128_t;
+
+}
 
 #endif
