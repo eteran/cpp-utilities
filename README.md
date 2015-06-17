@@ -38,3 +38,24 @@ The function is defined to return `bitset.size()` when no bits are set, this is 
 ### String Utility Functions
 
 [string.hpp](https://github.com/eteran/cpp-utilities/blob/master/string.hpp) provides several common string functions such as trimming, upper/lower casing, testing what it starts and ends with, etc.
+
+### Algorithms
+
+[algorithm.hpp](https://github.com/eteran/cpp-utilities/blob/master/algorithm.hpp) is a set of algorithms for general purpose use. Currently there are implementations of variadic min and max functions which are compile time. For example:
+
+	int n = algorithm::static_max(1, 2, 3, 10, 5, 6);
+	printf("%d\n", n); // prints 10
+	
+Because it is a compile time constant, you can also safely use it in templates as well. For example:
+
+	template <int N>
+	struct Foo {
+		static const int value = N * 2;
+	};
+
+	int main() {
+		int n = Foo<algorithm::static_max(1, 2, 3, 10, 5, 6)>::value;
+		printf("%d\n", n); // prints 20
+	}
+
+Of course your compiler will have to have good support for `constexpr` :-).

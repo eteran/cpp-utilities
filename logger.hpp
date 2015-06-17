@@ -234,10 +234,11 @@ private:
 };
 
 class log_ref {
-public:
+private:
 	explicit log_ref(log_impl *p) noexcept : ptr_(p) {
 	}
 
+public:
 	explicit log_ref(Level level) noexcept : ptr_(new log_impl(level)) {
 	}
 
