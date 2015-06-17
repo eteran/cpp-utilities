@@ -104,3 +104,12 @@ Will print:
 	   )
 	)
 
+
+[Fixed.h](https://github.com/eteran/cpp-utilities/blob/master/Fixed.h)
+
+This is a Fixed Point math class for c++. It supports all combinations which add up to a native data types (8.8/16.16/24.8/etc). The template parameters are the number of bits to use as the base type for both the integer and fractional portions, invalid combinations will yield a compiler error, the current implementation makes use of c++-11 static assert to make this more readable. It should be a nice drop in replacement for native float types. Here's an example usage:
+
+	typedef numeric::Fixed<16, 16> fixed;
+	fixed f;
+	
+This will declare a 16.16 fixed point number. Operators are provided though the use of boost::operators. multiplication and division are implemented in free functions named `numeric::multiply` and `numeric::divide` which use `std::enable_if` to choose the best option. If a larger type is available, it will use the accurate and fast scaled math version. If here is not a larger type, then it will fall back on the slower multiply and emulated divide (which unfortunately has less precision). This system allows the user to specialize the multiplication and division as needed.	
