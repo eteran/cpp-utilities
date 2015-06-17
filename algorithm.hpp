@@ -24,7 +24,7 @@ constexpr T static_min(T n) {
 
 template <class T, class ... Args>
 constexpr T static_min(T n, Args ... args) {
-	return n < static_max(args...) ? n : static_max(args...);
+	return n < static_min(args...) ? n : static_min(args...);
 }
 
 }
