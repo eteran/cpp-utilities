@@ -59,3 +59,48 @@ Because it is a compile time constant, you can also safely use it in templates a
 	}
 
 Of course your compiler will have to have good support for `constexpr` :-).
+
+### Pretty Printers
+
+[pprint.hpp](https://github.com/eteran/cpp-utilities/blob/master/pprint.hpp) is a set of utility functions to print common c++ data structures in a "pretty" way. Similar to PHP's `print_r()`. Usage looks like this:
+
+	std::vector<int> v = { 1, 2, 3, 4, 5, 6, 7 };
+	std::cout << pprint::to_string(v) << std::endl;
+	
+Which will print:
+
+	std::vector<>
+	(
+	   [0] => 1
+	   [1] => 2
+	   [2] => 3
+	   [3] => 4
+	   [4] => 5
+	   [5] => 6
+	   [6] => 7
+	)
+
+`std::vector`, `std::list`, `std::deque`, `std::set`, `std::map` are all supported. Additionally, complex nesting of containers should work just fine. For example, a list of vectors:
+
+	std::list<std::vector<int>> v = { {1, 2, 3}, {4, 5, 6, 7} };
+	std::cout << pprint::to_string(v) << std::endl;
+	
+Will print:
+
+	std::list<>
+	(
+	   [0] => std::vector<>
+	   (
+    	   [0] => 1
+    	   [1] => 2
+    	   [2] => 3
+	   )
+	   [1] => std::vector<>
+	   (
+    	   [0] => 4
+    	   [1] => 5
+    	   [2] => 6
+    	   [3] => 7
+	   )
+	)
+
