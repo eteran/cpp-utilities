@@ -105,6 +105,7 @@ Will print:
 	)
 
 
+### Fixed Point Math
 [Fixed.h](https://github.com/eteran/cpp-utilities/blob/master/Fixed.h)
 
 This is a Fixed Point math class for c++. It supports all combinations which add up to a native data types (8.8/16.16/24.8/etc). The template parameters are the number of bits to use as the base type for both the integer and fractional portions, invalid combinations will yield a compiler error, the current implementation makes use of c++-11 static assert to make this more readable. It should be a nice drop in replacement for native float types. Here's an example usage:
