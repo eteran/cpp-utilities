@@ -113,16 +113,16 @@ MD5::Digest MD5::finalize() const {
 	const size_t n = s.index_++;
 
 	if(n > 55) {
-    	while(s.index_ < State::BlockSize) {
-        	s.block_[s.index_++] = 0;
-    	}
+		while(s.index_ < State::BlockSize) {
+			s.block_[s.index_++] = 0;
+		}
 
-    	processMessageBlock(&s, &d);
+		processMessageBlock(&s, &d);
 	}
 
-    while(s.index_ < 56) {
-        s.block_[s.index_++] = 0;
-    }
+	while(s.index_ < 56) {
+		s.block_[s.index_++] = 0;
+	}
 
 	// append length (before padding)
 	s.block_[56] = (s.length_      ) & 0xff;
@@ -266,13 +266,13 @@ void MD5::processMessageBlock(State *state, Digest *digest) {
 }
 
 MD5 &MD5::append(uint8_t byte) {
-    state_.block_[state_.index_++] = byte;
+	state_.block_[state_.index_++] = byte;
 
-    state_.length_ += 8;
+	state_.length_ += 8;
 
-    if(state_.index_ == State::BlockSize) {
-        processMessageBlock(&state_, &digest_);
-    }
+	if(state_.index_ == State::BlockSize) {
+		processMessageBlock(&state_, &digest_);
+	}
 	return *this;
 }
 

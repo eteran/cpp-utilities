@@ -45,7 +45,7 @@ public:
 
 	private:
 		uint8_t  block_[BlockSize]; // input buffer
-		uint64_t length_;			// number of bits
+		uint64_t length_;           // number of bits
 		size_t   index_;
 	};
 
@@ -83,9 +83,9 @@ public:
 public:
 	template <class In>
 	MD5 &append(In first, In last) {
-    	while(first != last) {
+		while(first != last) {
 			append(*first++);
-    	}
+		}
 		return *this;
 	}
 
