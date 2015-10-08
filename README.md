@@ -1,6 +1,19 @@
 # cpp-utilities
 Miscellaneous C++11 utility classes and functions
 
+### Hash Library
+Found in [MD5.h](https://github.com/eteran/cpp-utilities/blob/master/MD5.h) and [MD5.cpp](https://github.com/eteran/cpp-utilities/blob/master/MD5.cpp) (SHA1 comming soon).
+
+As you might expect, this is an implementation of the MD5 hashing algorithm. Designed for ease of use.
+
+    // create an MD5 object and give it some data
+    hash::MD5 hasher("Hello World");
+    hasher.append('!'); // you can stream new values in as you please
+    auto digest = hasher.finalize();  // create a digest for "Hello World!"
+    std::cout << digest.to_string() << std::endl;
+
+**NOTE:** One thing to note that I feel is a nice design feature. `finalize()` does not modify the internal state of the hasher, it returns a copy of the digest in finalized form. This means that you can call `finalize()`, then continue to append new data into the hasher, call `finalize()` again, and get correct hashes.
+
 ### Arena Allocator
 
 Found in [arena.hpp](https://github.com/eteran/cpp-utilities/blob/master/arena.hpp). This is an implementation of a very efficient fixed block size arena allocator. It allows allocating and freeing back to the arena (if you want to, it isn't necessary), and will use one of two strategies depending on the size of blocks you need. If the blocks are smaller than the size of a pointer, and the arena is relatively small, then it will use a bitmap along with compiler intrinsics to find free blocks. If the the blocks are at least as large as a pointer, it will use a freelist implementation. Template deduction will choose the best backend for you.
