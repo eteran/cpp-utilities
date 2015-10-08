@@ -287,7 +287,7 @@ MD5 &MD5::operator<<(uint8_t byte) {
 //------------------------------------------------------------------------------
 std::string MD5::Digest::to_string() const {
 	static const char hexchars[] = "0123456789abcdef";
-	char buf[32] = "";
+	char buf[32];
 
 	for(int i = 0; i < 4; ++i) {
 		buf[0 + 8 * i] = hexchars[(h_[i] & 0x000000f0) >> 0x04];
