@@ -90,6 +90,7 @@ public:
 	}
 
 	MD5 &append(uint8_t byte);
+	MD5 &append(const std::string &s);
 	MD5 &operator<<(uint8_t byte);
 
 public:
