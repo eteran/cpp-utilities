@@ -2,9 +2,9 @@
 Miscellaneous C++11 utility classes and functions
 
 ### Hash Library
-Found in [MD5.h](https://github.com/eteran/cpp-utilities/blob/master/MD5.h) and [MD5.cpp](https://github.com/eteran/cpp-utilities/blob/master/MD5.cpp) (SHA1 comming soon).
+Found in [MD5.h](https://github.com/eteran/cpp-utilities/blob/master/MD5.h), [MD5.cpp](https://github.com/eteran/cpp-utilities/blob/master/MD5.cpp), [SHA1.h](https://github.com/eteran/cpp-utilities/blob/master/SHA1.h) and [SHA1.cpp](https://github.com/eteran/cpp-utilities/blob/master/SHA1.cpp).
 
-As you might expect, this is an implementation of the MD5 hashing algorithm. Designed for ease of use.
+As you might expect, this is an implementation of the MD5 and SHA1 hashing algorithms. The usage of both are identical and designed for ease of use.
 
     // create an MD5 object and give it some data
     hash::MD5 hasher("Hello World");
