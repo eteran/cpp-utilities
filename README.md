@@ -21,12 +21,12 @@ Found in [arena.hpp](https://github.com/eteran/cpp-utilities/blob/master/arena.h
 Usage is **very** simple:
 
     // create an arena of 1024 64-bit blocks 
-    auto arena = arena::make_arena<uint64_t, 1024>();
+    auto arena = memory::make_arena<sizeof(uint64_t), 1024>();
     auto p1 = arena.allocate(); // get a single uint64_t sized block
     arena.release(p1);          // free that block back into the system 
                                 // (not necessary, the arena will clean itself up)
     
-On my system , the allocate function when using the freelist strategy, allocate was **as few a 6 instructions**. Some of which were simple `nullptr` checks.
+On my system , the allocate function when using the freelist strategy, allocate was **as few a 5 instructions**. Some of which were simple `nullptr` checks.
 
 ### Bitset Utility Functions
 
