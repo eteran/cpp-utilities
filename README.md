@@ -36,13 +36,13 @@ Found in [bitset.hpp](https://github.com/eteran/cpp-utilities/blob/master/bitset
     bs[4]  = true;
     bs[10] = true;
     int bit_l = bitset::find_first(bs); // returns 4
-	int bit_h = bitset::find_last(bs); // returns 10
+    int bit_h = bitset::find_last(bs); // returns 10
     
 The function is defined to return `bitset.size()` when no bits are set, this is similar to containers returning `.end()` for find operations.
 
 ### Bitwise Operations
 
-[bitwise.hpp](https://github.com/eteran/cpp-utilities/blob/master/bitwise.hpp) provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution.
+[bitwise.hpp](https://github.com/eteran/cpp-utilities/blob/master/bitwise.hpp) provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution. Impressively, gcc will often reduce this to a single `rol` instruction when optimizations are enabled!
 
     int x = 5;
     int y = bitwise::rotate_right(x, 15);
