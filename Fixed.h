@@ -38,7 +38,7 @@ namespace numeric {
 template <size_t I, size_t F>
 class Fixed;
 
-namespace {
+namespace detail {
 
 // helper templates to make magic with types :)
 // these allow us to determine resonable types from
@@ -247,14 +247,14 @@ void multiply(const Fixed<I,F> &lhs, const Fixed<I,F> &rhs, Fixed<I,F> &result, 
  */
 template <size_t I, size_t F>
 class Fixed : boost::operators<Fixed<I,F> >, boost::shiftable<Fixed<I,F> > {
-	static_assert(type_from_size<I + F>::is_specialized, "invalid combination of sizes");
+	static_assert(detail::type_from_size<I + F>::is_specialized, "invalid combination of sizes");
 
 public:
 	static const size_t fractional_bits = F;
 	static const size_t integer_bits    = I;
 	static const size_t total_bits      = I + F;
 
-	typedef type_from_size<total_bits>             base_type_info;
+	typedef detail::type_from_size<total_bits>             base_type_info;
 
 	typedef typename base_type_info::value_type            base_type;
 	typedef typename base_type_info::next_size::value_type next_type;
