@@ -37,7 +37,7 @@
 
 
 namespace pprint {
-namespace {
+namespace detail {
 
 template <class T> std::string to_string(const std::vector<T> &c, int indent);
 template <class T> std::string to_string(const std::list<T> &c, int indent);
@@ -114,27 +114,27 @@ std::string to_string(const std::set<T> &c, int indent) {
 
 template <class T>
 std::string to_string(const std::vector<T> &c) {
-	return to_string<T>(c, 0);
+	return detail::to_string<T>(c, 0);
 }
 
 template <class T>
 std::string to_string(const std::list<T> &c) {
-	return to_string<T>(c, 0);
+	return detail::to_string<T>(c, 0);
 }
 
 template <class T>
 std::string to_string(const std::deque<T> &c) {
-	return to_string<T>(c, 0);
+	return detail::to_string<T>(c, 0);
 }
 
 template <class T>
 std::string to_string(const std::set<T> &c) {
-	return to_string<T>(c, 0);
+	return detail::to_string<T>(c, 0);
 }
 
 template <class T1, class T2>
 std::string to_string(const std::map<T1, T2> &c) {
-	return to_string<T1, T2>(c, 0);
+	return detail::to_string<T1, T2>(c, 0);
 }
 
 
