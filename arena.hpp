@@ -33,7 +33,7 @@
 #include <cstdint>
 
 namespace arena {
-namespace {
+namespace detail {
 
 struct bitset_strategy {};
 struct linked_strategy {};
@@ -184,13 +184,13 @@ private:
 }
 
 template <class T, size_t N>
-arena_allocator<T, N, linked_strategy> make_arena(typename std::enable_if<sizeof(T) >= sizeof(void*)>::type* = 0) {
-	return arena_allocator<T, N, linked_strategy>();
+detail::arena_allocator<T, N, detail::linked_strategy> make_arena(typename std::enable_if<sizeof(T) >= sizeof(void*)>::type* = 0) {
+	return detail::arena_allocator<T, N, detail::linked_strategy>();
 }
 
 template <class T, size_t N>
-arena_allocator<T, N, bitset_strategy> make_arena(typename std::enable_if<sizeof(T) < sizeof(void*)>::type* = 0) {
-	return arena_allocator<T, N, bitset_strategy>();
+detail::arena_allocator<T, N, detail::bitset_strategy> make_arena(typename std::enable_if<sizeof(T) < sizeof(void*)>::type* = 0) {
+	return detail::arena_allocator<T, N, detail::bitset_strategy>();
 }
 
 }
