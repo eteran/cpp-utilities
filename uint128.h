@@ -35,7 +35,7 @@
 
 namespace numeric {
 
-namespace {
+namespace detail {
 template <typename T>
 static void divide(const T &numerator, const T &denominator, T &quotient, T &remainder) {
 
@@ -287,13 +287,13 @@ public: // basic math operators
 
     uint128 &operator/=(const uint128 &b) {
 		uint128 remainder;
-		divide(*this, b, *this, remainder);
+		detail::divide(*this, b, *this, remainder);
 		return *this;
     }
 
     uint128 &operator%=(const uint128 &b) {
 		uint128 quotient;
-		divide(*this, b, quotient, *this);
+		detail::divide(*this, b, quotient, *this);
 		return *this;
     }
 
@@ -393,7 +393,7 @@ public:
     	while (ii != 0 && i) {
 
 			uint128 remainder;
-			divide(ii, uint128(radix), ii, remainder);
+			detail::divide(ii, uint128(radix), ii, remainder);
         	sz [--i] = "0123456789abcdefghijklmnopqrstuvwxyz"[remainder.to_integer()];
     	}
 
