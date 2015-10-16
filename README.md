@@ -16,7 +16,7 @@ As you might expect, this is an implementation of the MD5 and SHA1 hashing algor
 
 ### Arena Allocator
 
-Found in [arena.hpp](https://github.com/eteran/cpp-utilities/blob/master/arena.hpp). This is an implementation of a very efficient fixed block size arena allocator. It allows allocating and freeing back to the arena (if you want to, it isn't necessary), and will use one of two strategies depending on the size of blocks you need. If the blocks are smaller than the size of a pointer, and the arena is relatively small, then it will use a bitmap along with compiler intrinsics to find free blocks. If the the blocks are at least as large as a pointer, it will use a freelist implementation. Template deduction will choose the best backend for you.
+Found in [arena.h](https://github.com/eteran/cpp-utilities/blob/master/arena.h). This is an implementation of a very efficient fixed block size arena allocator. It allows allocating and freeing back to the arena (if you want to, it isn't necessary), and will use one of two strategies depending on the size of blocks you need. If the blocks are smaller than the size of a pointer, and the arena is relatively small, then it will use a bitmap along with compiler intrinsics to find free blocks. If the the blocks are at least as large as a pointer, it will use a freelist implementation. Template deduction will choose the best backend for you.
 
 Usage is **very** simple:
 
@@ -30,7 +30,7 @@ On my system , the allocate function when using the freelist strategy, allocate 
 
 ### Bitset Utility Functions
 
-Found in [bitset.hpp](https://github.com/eteran/cpp-utilities/blob/master/bitset.hpp). This header provides a nice utility function to find the first set bit in a bitset. When possible using GCC intrinsics to do it in O(1) time, but falling back on an iterative implementation when this is not possible.
+Found in [bitset.h](https://github.com/eteran/cpp-utilities/blob/master/bitset.h). This header provides a nice utility function to find the first set bit in a bitset. When possible using GCC intrinsics to do it in O(1) time, but falling back on an iterative implementation when this is not possible.
 
     std::bitset<32> bs;
     bs[4]  = true;
@@ -42,7 +42,7 @@ The function is defined to return `bitset.size()` when no bits are set, this is 
 
 ### Bitwise Operations
 
-[bitwise.hpp](https://github.com/eteran/cpp-utilities/blob/master/bitwise.hpp) provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution. Impressively, gcc will often reduce this to a single `rol` instruction when optimizations are enabled!
+[bitwise.h](https://github.com/eteran/cpp-utilities/blob/master/bitwise.h) provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution. Impressively, gcc will often reduce this to a single `rol` instruction when optimizations are enabled!
 
     int x = 5;
     int y = bitwise::rotate_right(x, 15);
@@ -50,11 +50,11 @@ The function is defined to return `bitset.size()` when no bits are set, this is 
 
 ### String Utility Functions
 
-[string.hpp](https://github.com/eteran/cpp-utilities/blob/master/string.hpp) provides several common string functions such as trimming, upper/lower casing, testing what it starts and ends with, etc.
+[string.h](https://github.com/eteran/cpp-utilities/blob/master/string.h) provides several common string functions such as trimming, upper/lower casing, testing what it starts and ends with, etc.
 
 ### Algorithms
 
-[algorithm.hpp](https://github.com/eteran/cpp-utilities/blob/master/algorithm.hpp) is a set of algorithms for general purpose use. Currently there are implementations of variadic min and max functions which are compile time. For example:
+[algorithm.h](https://github.com/eteran/cpp-utilities/blob/master/algorithm.h) is a set of algorithms for general purpose use. Currently there are implementations of variadic min and max functions which are compile time. For example:
 
 	int n = algorithm::static_max(1, 2, 3, 10, 5, 6);
 	printf("%d\n", n); // prints 10
@@ -75,7 +75,7 @@ Of course your compiler will have to have good support for `constexpr` :-).
 
 ### Pretty Printers
 
-[pprint.hpp](https://github.com/eteran/cpp-utilities/blob/master/pprint.hpp) is a set of utility functions to print common c++ data structures in a "pretty" way. Similar to PHP's `print_r()`. Usage looks like this:
+[pprint.h](https://github.com/eteran/cpp-utilities/blob/master/pprint.h) is a set of utility functions to print common c++ data structures in a "pretty" way. Similar to PHP's `print_r()`. Usage looks like this:
 
 	std::vector<int> v = { 1, 2, 3, 4, 5, 6, 7 };
 	std::cout << pprint::to_string(v) << std::endl;

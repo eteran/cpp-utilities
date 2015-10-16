@@ -26,7 +26,7 @@
 #define UTILITY_ARENA_HPP_
 
 
-#include "bitset.hpp"
+#include "bitset.h"
 #include <bitset>
 #include <cassert>
 #include <cstring>
@@ -38,7 +38,7 @@ namespace memory {
 namespace detail {
 
 template <int N, class T>
-constexpr T align_to(T value) {
+constexpr T round_to(T value) {
 	static_assert((N & (N - 1)) == 0, "invalid target rounding value");
 	return ((value + N - 1) & ~(N - 1));
 }
@@ -121,7 +121,7 @@ class arena_allocator<Size, Count, linked_strategy> {
 	static_assert(Size >= sizeof(void *), "Linked strategy can only be used for objects larger than or equal to the size of a pointer");
 
 private:
-	using T = struct { char bytes[align_to<sizeof(void *)>(Size)]; };
+	using T = struct { char bytes[round_to<sizeof(void *)>(Size)]; };
 
 private:
 	struct node {
