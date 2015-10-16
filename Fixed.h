@@ -58,7 +58,7 @@ struct type_from_size<128> {
 	typedef __int128            value_type;
 	typedef unsigned __int128   unsigned_type;
 	typedef __int128            signed_type;
-	typedef type_from_size<128> next_size;
+	typedef type_from_size<256> next_size;
 };
 #endif
 
@@ -105,7 +105,7 @@ struct type_from_size<8> {
 // this is to assist in adding support for non-native base
 // types (for adding big-int support), this should be fine
 // unless your bit-int class doesn't nicely support casting
-template<class B, class N>
+template <class B, class N>
 B next_to_base(const N& rhs) {
 	return static_cast<B>(rhs);
 }
@@ -246,7 +246,7 @@ void multiply(const Fixed<I,F> &lhs, const Fixed<I,F> &rhs, Fixed<I,F> &result, 
  * without having to specify all the different versions of operators manually
  */
 template <size_t I, size_t F>
-class Fixed : boost::operators<Fixed<I,F> >, boost::shiftable<Fixed<I,F> > {
+class Fixed : boost::operators<boost::shiftable<Fixed<I,F>>> {
 	static_assert(detail::type_from_size<I + F>::is_specialized, "invalid combination of sizes");
 
 public:
@@ -385,13 +385,13 @@ public:	// basic math operators
 	}
 
 	Fixed& operator*=(const Fixed &n) {
-		multiply(*this, n, *this);
+		detail::multiply(*this, n, *this);
 		return *this;
 	}
 
 	Fixed& operator/=(const Fixed &n) {
 		Fixed temp;
-		*this = divide(*this, n, temp);
+		*this = detail::divide(*this, n, temp);
 		return *this;
 	}
 
