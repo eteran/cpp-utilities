@@ -221,20 +221,23 @@ SHA1 &SHA1::append(const std::string &s) {
 std::string SHA1::Digest::to_string() const {
 
 	static const char hexchars[] = "0123456789abcdef";
-	char buf[40];
+	std::string str;
+	str.reserve(40);
+	
+	auto p = std::back_inserter(str);
 
 	for(int i = 0; i < 5; ++i) {
-		buf[0 + 8 * i] = hexchars[(h_[i] & 0xf0000000) >> 0x1c];
-		buf[1 + 8 * i] = hexchars[(h_[i] & 0x0f000000) >> 0x18];
-		buf[2 + 8 * i] = hexchars[(h_[i] & 0x00f00000) >> 0x14];
-		buf[3 + 8 * i] = hexchars[(h_[i] & 0x000f0000) >> 0x10];
-		buf[4 + 8 * i] = hexchars[(h_[i] & 0x0000f000) >> 0x0c];
-		buf[5 + 8 * i] = hexchars[(h_[i] & 0x00000f00) >> 0x08];
-		buf[6 + 8 * i] = hexchars[(h_[i] & 0x000000f0) >> 0x04];
-		buf[7 + 8 * i] = hexchars[(h_[i] & 0x0000000f) >> 0x00];
+		*p++ = hexchars[(h_[i] & 0xf0000000) >> 0x1c];
+		*p++ = hexchars[(h_[i] & 0x0f000000) >> 0x18];
+		*p++ = hexchars[(h_[i] & 0x00f00000) >> 0x14];
+		*p++ = hexchars[(h_[i] & 0x000f0000) >> 0x10];
+		*p++ = hexchars[(h_[i] & 0x0000f000) >> 0x0c];
+		*p++ = hexchars[(h_[i] & 0x00000f00) >> 0x08];
+		*p++ = hexchars[(h_[i] & 0x000000f0) >> 0x04];
+		*p++ = hexchars[(h_[i] & 0x0000000f) >> 0x00];
 	}
 
-	return std::string(buf, sizeof(buf));
+	return str;
 }
 
 //------------------------------------------------------------------------------
@@ -245,10 +248,10 @@ std::array<uint8_t, 20> SHA1::Digest::bytes() const {
 	std::array<uint8_t, 20> b;
 
 	for(int i = 0; i < 5; ++i) {
-		b[3 + (i * 4)] = (h_[i] & 0xff000000) >> 24;
-		b[2 + (i * 4)] = (h_[i] & 0x00ff0000) >> 16;
-		b[1 + (i * 4)] = (h_[i] & 0x0000ff00) >> 8;
 		b[0 + (i * 4)] = (h_[i] & 0x000000ff);
+		b[1 + (i * 4)] = (h_[i] & 0x0000ff00) >> 8;
+		b[2 + (i * 4)] = (h_[i] & 0x00ff0000) >> 16;
+		b[3 + (i * 4)] = (h_[i] & 0xff000000) >> 24;
 	}
 
 	return b;

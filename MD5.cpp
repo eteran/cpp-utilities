@@ -287,20 +287,24 @@ MD5 &MD5::operator<<(uint8_t byte) {
 //------------------------------------------------------------------------------
 std::string MD5::Digest::to_string() const {
 	static const char hexchars[] = "0123456789abcdef";
-	char buf[32];
+	
+	std::string str;
+	str.reserve(32);
+	
+	auto p = std::back_inserter(str);
 
 	for(int i = 0; i < 4; ++i) {
-		buf[0 + 8 * i] = hexchars[(h_[i] & 0x000000f0) >> 0x04];
-		buf[1 + 8 * i] = hexchars[(h_[i] & 0x0000000f) >> 0x00];
-		buf[2 + 8 * i] = hexchars[(h_[i] & 0x0000f000) >> 0x0c];
-		buf[3 + 8 * i] = hexchars[(h_[i] & 0x00000f00) >> 0x08];
-		buf[4 + 8 * i] = hexchars[(h_[i] & 0x00f00000) >> 0x14];
-		buf[5 + 8 * i] = hexchars[(h_[i] & 0x000f0000) >> 0x10];
-		buf[6 + 8 * i] = hexchars[(h_[i] & 0xf0000000) >> 0x1c];
-		buf[7 + 8 * i] = hexchars[(h_[i] & 0x0f000000) >> 0x18];
+		*p++ = hexchars[(h_[i] & 0x000000f0) >> 0x04];
+		*p++ = hexchars[(h_[i] & 0x0000000f) >> 0x00];
+		*p++ = hexchars[(h_[i] & 0x0000f000) >> 0x0c];
+		*p++ = hexchars[(h_[i] & 0x00000f00) >> 0x08];
+		*p++ = hexchars[(h_[i] & 0x00f00000) >> 0x14];
+		*p++ = hexchars[(h_[i] & 0x000f0000) >> 0x10];
+		*p++ = hexchars[(h_[i] & 0xf0000000) >> 0x1c];
+		*p++ = hexchars[(h_[i] & 0x0f000000) >> 0x18];
 	}
 
-	return std::string(buf, sizeof(buf));
+	return str;
 }
 
 //------------------------------------------------------------------------------
@@ -311,10 +315,10 @@ std::array<uint8_t, 16> MD5::Digest::bytes() const {
 	std::array<uint8_t, 16> b;
 
 	for(int i = 0; i < 4; ++i) {
-		b[3 + (i * 4)] = (h_[i] & 0xff000000) >> 24;
-		b[2 + (i * 4)] = (h_[i] & 0x00ff0000) >> 16;
-		b[1 + (i * 4)] = (h_[i] & 0x0000ff00) >> 8;
 		b[0 + (i * 4)] = (h_[i] & 0x000000ff);
+		b[1 + (i * 4)] = (h_[i] & 0x0000ff00) >> 8;
+		b[2 + (i * 4)] = (h_[i] & 0x00ff0000) >> 16;
+		b[3 + (i * 4)] = (h_[i] & 0xff000000) >> 24;
 	}
 
 	return b;
