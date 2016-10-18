@@ -246,7 +246,7 @@ void multiply(const Fixed<I,F> &lhs, const Fixed<I,F> &rhs, Fixed<I,F> &result, 
  * without having to specify all the different versions of operators manually
  */
 template <size_t I, size_t F>
-class Fixed : boost::operators<boost::shiftable<Fixed<I,F>>> {
+class Fixed : boost::operators<Fixed<I,F>> {
 	static_assert(detail::type_from_size<I + F>::is_specialized, "invalid combination of sizes");
 
 public:
