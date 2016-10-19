@@ -9,7 +9,8 @@
 #include <utility>
 #include <vector>
 
-template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T>>> class FlatMap {
+template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T>>>
+class FlatMap {
 public:
 	using key_type               = Key;
 	using mapped_type            = T;
