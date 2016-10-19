@@ -127,3 +127,9 @@ This is a Fixed Point math class for c++11. It supports all combinations which a
 	fixed f;
 	
 This will declare a 16.16 fixed point number. Operators are provided though the use of boost::operators. multiplication and division are implemented in free functions named `numeric::multiply` and `numeric::divide` which use `std::enable_if` to choose the best option. If a larger type is available, it will use the accurate and fast scaled math version. If there is not a larger type available, then it will fall back on the slower multiply and emulated divide (which unfortunately has less precision). This system allows the user to specialize the multiplication and division as needed.	
+
+
+### Flat associative containers
+[FlatMap.h](https://github.com/eteran/cpp-utilities/blob/master/FlatMap.h)
+
+This is an implementation of a `std::map` but using a contiguous data structure (`std::vector`) as the underlying storage. The elements are stored sorted by key, so lookup should be as efficient as a `binary_search`, and iteration is as efficient as accessing a `std::vector`.
