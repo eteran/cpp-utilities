@@ -133,3 +133,7 @@ This will declare a 16.16 fixed point number. Operators are provided though the 
 [FlatMap.h](https://github.com/eteran/cpp-utilities/blob/master/FlatMap.h)
 
 This is an implementation of a `std::map` but using a contiguous data structure (`std::vector`) as the underlying storage. The elements are stored sorted by key, so lookup should be as efficient as a `binary_search`, and iteration is as efficient as accessing a `std::vector`.
+
+[FlatSet.h](https://github.com/eteran/cpp-utilities/blob/master/FlatSet.h)
+
+This is an implementation of a `std::set` but using a contiguous data structure (`std::vector`) as the underlying storage. The elements are stored sorted by key, so lookup should be as efficient as a `binary_search`, and iteration is as efficient as accessing a `std::vector`.
