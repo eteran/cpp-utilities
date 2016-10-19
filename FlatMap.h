@@ -67,11 +67,13 @@ public:
 	explicit FlatMap(const Compare &comp, const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
 	}
 
-	template <class In> FlatMap(In first, In last, const Compare &comp = Compare(), const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
+	template <class In>
+	FlatMap(In first, In last, const Compare &comp = Compare(), const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
 		insert(first, last);
 	}
 
-	template <class In> FlatMap(In first, In last, const Allocator &alloc) : storage_(alloc) {
+	template <class In>
+	FlatMap(In first, In last, const Allocator &alloc) : storage_(alloc) {
 		insert(first, last);
 	}
 
@@ -182,22 +184,27 @@ public:
 		using std::begin;
 		return begin(storage_);
 	}
+
 	const_iterator begin() const {
 		using std::begin;
 		return begin(storage_);
 	}
+
 	const_iterator cbegin() const {
 		using std::cbegin;
 		return cbegin(storage_);
 	}
+
 	iterator end() {
 		using std::end;
 		return end(storage_);
 	}
+
 	const_iterator end() const {
 		using std::end;
 		return end(storage_);
 	}
+
 	const_iterator cend() const {
 		using std::cend;
 		return cend(storage_);
@@ -207,22 +214,27 @@ public:
 		using std::rbegin;
 		return rbegin(storage_);
 	}
+
 	const_reverse_iterator rbegin() const {
 		using std::rbegin;
 		return rbegin(storage_);
 	}
+
 	const_reverse_iterator crbegin() const {
 		using std::crbegin;
 		return crbegin(storage_);
 	}
+
 	reverse_iterator rend() {
 		using std::rend;
 		return rend(storage_);
 	}
+
 	const_reverse_iterator rend() const {
 		using std::rend;
 		return rend(storage_);
 	}
+
 	const_reverse_iterator crend() const {
 		using std::crend;
 		return crend(storage_);
@@ -232,9 +244,11 @@ public:
 	bool empty() const {
 		return storage_.empty();
 	}
+
 	size_type size() const {
 		return storage_.size();
 	}
+
 	size_type max_size() const {
 		return storage_.max_size();
 	}
@@ -259,7 +273,8 @@ public:
 		}
 	}
 
-	template <class P> std::pair<iterator, bool> insert(P &&value) {
+	template <class P>
+	std::pair<iterator, bool> insert(P &&value) {
 		using std::begin;
 		using std::end;
 		auto it = std::lower_bound(begin(storage_), end(storage_), value, comp_);
@@ -268,7 +283,7 @@ public:
 			return std::make_pair(it, false);
 		} else {
 			// create it
-			auto n = storage_.insert(it, std::move(value));
+			auto n = storage_.insert(it, std::forward<P>(value));
 			return std::make_pair(n, true);
 		}
 	}
@@ -292,9 +307,10 @@ public:
 		return insert(value);
 	}
 
-	template <class P> std::pair<iterator, bool> insert(const_iterator hint, P &&value) {
+	template <class P>
+	std::pair<iterator, bool> insert(const_iterator hint, P &&value) {
 		(void)hint;
-		return insert(std::move(value));
+		return insert(std::forward<P>(value));
 	}
 
 	std::pair<iterator, bool> insert(const_iterator hint, value_type &&value) {
@@ -302,7 +318,8 @@ public:
 		return insert(std::move(value));
 	}
 
-	template <class In> void insert(In first, In last) {
+	template <class In>
+	void insert(In first, In last) {
 		while (first != last) {
 			insert(*first++);
 		}
@@ -315,41 +332,46 @@ public:
 	}
 
 public:
-	template <class M> std::pair<iterator, bool> insert_or_assign(const key_type &key, M &&obj) {
+	template <class M>
+	std::pair<iterator, bool> insert_or_assign(const key_type &key, M &&obj) {
 		auto it = insert(key);
 		if (it.second) {
-			it.first->second = std::move(obj);
+			it.first->second = std::forward<M>(obj);
 		}
 		return it;
 	}
 
-	template <class M> std::pair<iterator, bool> insert_or_assign(key_type &&key, M &&obj) {
+	template <class M>
+	std::pair<iterator, bool> insert_or_assign(key_type &&key, M &&obj) {
 		auto it = insert(key);
 		if (it.second) {
-			it.first->second = std::move(obj);
+			it.first->second = std::forward<M>(obj);
 		}
 		return it;
 	}
 
-	template <class M> std::pair<iterator, bool> insert_or_assign(const_iterator hint, const key_type &key, M &&obj) {
+	template <class M>
+	std::pair<iterator, bool> insert_or_assign(const_iterator hint, const key_type &key, M &&obj) {
 		auto it = insert(hint, key);
 		if (it.second) {
-			it.first->second = std::move(obj);
+			it.first->second = std::forward<M>(obj);
 		}
 		return it;
 	}
 
-	template <class M> std::pair<iterator, bool> insert_or_assign(const_iterator hint, key_type &&key, M &&obj) {
+	template <class M>
+	std::pair<iterator, bool> insert_or_assign(const_iterator hint, key_type &&key, M &&obj) {
 		auto it = insert(hint, key);
 		if (it.second) {
-			it.first->second = std::move(obj);
+			it.first->second = std::forward<M>(obj);
 		}
 		return it;
 	}
 
 public:
 	// TODO:  try_emplace
-	template <class... Args> std::pair<iterator, bool> emplace(Args &&... args) {
+	template <class... Args>
+	std::pair<iterator, bool> emplace(Args &&... args) {
 		using std::begin;
 		using std::end;
 
@@ -366,7 +388,8 @@ public:
 		}
 	}
 
-	template <class... Args> std::pair<iterator, bool> emplace_hint(const_iterator hint, Args &&... args) {
+	template <class... Args>
+	std::pair<iterator, bool> emplace_hint(const_iterator hint, Args &&... args) {
 
 		(void)hint;
 
@@ -420,7 +443,6 @@ public:
 
 public:
 	size_type count(const Key &key) const {
-
 		size_type c = 0;
 		using std::begin;
 		using std::end;
@@ -433,7 +455,8 @@ public:
 		return c;
 	}
 
-	template <class K> size_type count(const K &key) const {
+	template <class K>
+	size_type count(const K &key) const {
 		size_type c = 0;
 		using std::begin;
 		using std::end;
@@ -468,7 +491,8 @@ public:
 		return end(storage_);
 	}
 
-	template <class K> iterator find(const K &key) {
+	template <class K>
+	iterator find(const K &key) {
 		using std::begin;
 		using std::end;
 		auto it = std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
@@ -479,7 +503,8 @@ public:
 		return end(storage_);
 	}
 
-	template <class K> const_iterator find(const K &key) const {
+	template <class K>
+	const_iterator find(const K &key) const {
 		using std::begin;
 		using std::end;
 		auto it = std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
@@ -503,13 +528,15 @@ public:
 		return std::equal_range(begin(storage_), end(storage_), value_type(key, T()), comp_);
 	}
 
-	template <class K> std::pair<iterator, iterator> equal_range(const K &key) {
+	template <class K>
+	std::pair<iterator, iterator> equal_range(const K &key) {
 		using std::begin;
 		using std::end;
 		return std::equal_range(begin(storage_), end(storage_), value_type(key, T()), comp_);
 	}
 
-	template <class K> std::pair<const_iterator, const_iterator> equal_range(const K &key) const {
+	template <class K>
+	std::pair<const_iterator, const_iterator> equal_range(const K &key) const {
 		using std::begin;
 		using std::end;
 		return std::equal_range(begin(storage_), end(storage_), value_type(key, T()), comp_);
@@ -528,13 +555,15 @@ public:
 		return std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
 	}
 
-	template <class K> iterator lower_bound(const K &key) {
+	template <class K>
+	iterator lower_bound(const K &key) {
 		using std::begin;
 		using std::end;
 		return std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
 	}
 
-	template <class K> const_iterator lower_bound(const K &key) const {
+	template <class K>
+	const_iterator lower_bound(const K &key) const {
 		using std::begin;
 		using std::end;
 		return std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
@@ -553,13 +582,15 @@ public:
 		return std::upper_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
 	}
 
-	template <class K> iterator upper_bound(const K &key) {
+	template <class K>
+	iterator upper_bound(const K &key) {
 		using std::begin;
 		using std::end;
 		return std::upper_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
 	}
 
-	template <class K> const_iterator upper_bound(const K &key) const {
+	template <class K>
+	const_iterator upper_bound(const K &key) const {
 		using std::begin;
 		using std::end;
 		return std::upper_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
