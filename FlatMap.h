@@ -461,8 +461,8 @@ public:
 		size_type c = 0;
 		using std::begin;
 		using std::end;
-		auto it = std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
-		while (it != end(storage_) && !comp_(value_type(key, T()), *it)) {
+		auto it = std::lower_bound(begin(storage_), end(storage_), key, comp_);
+		while (it != end(storage_) && !comp_(key, *it)) {
 			++c;
 		}
 
@@ -473,8 +473,8 @@ public:
 	iterator find(const Key &key) {
 		using std::begin;
 		using std::end;
-		auto it = std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
-		if (it != end(storage_) && !comp_(value_type(key, T()), *it)) {
+		auto it = std::lower_bound(begin(storage_), end(storage_), key, comp_);
+		if (it != end(storage_) && !comp_(key, *it)) {
 			return it;
 		}
 
@@ -484,8 +484,8 @@ public:
 	const_iterator find(const Key &key) const {
 		using std::begin;
 		using std::end;
-		auto it = std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
-		if (it != end(storage_) && !comp_(value_type(key, T()), *it)) {
+		auto it = std::lower_bound(begin(storage_), end(storage_), key, comp_);
+		if (it != end(storage_) && !comp_(key, *it)) {
 			return it;
 		}
 
@@ -496,8 +496,8 @@ public:
 	iterator find(const K &key) {
 		using std::begin;
 		using std::end;
-		auto it = std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
-		if (it != end(storage_) && !comp_(value_type(key, T()), *it)) {
+		auto it = std::lower_bound(begin(storage_), end(storage_), key, comp_);
+		if (it != end(storage_) && !comp_(key, *it)) {
 			return it;
 		}
 
@@ -508,8 +508,8 @@ public:
 	const_iterator find(const K &key) const {
 		using std::begin;
 		using std::end;
-		auto it = std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
-		if (it != end(storage_) && !comp_(value_type(key, T()), *it)) {
+		auto it = std::lower_bound(begin(storage_), end(storage_), key, comp_);
+		if (it != end(storage_) && !comp_(key, *it)) {
 			return it;
 		}
 
@@ -520,81 +520,81 @@ public:
 	std::pair<iterator, iterator> equal_range(const Key &key) {
 		using std::begin;
 		using std::end;
-		return std::equal_range(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::equal_range(begin(storage_), end(storage_), key, comp_);
 	}
 
 	std::pair<const_iterator, const_iterator> equal_range(const Key &key) const {
 		using std::begin;
 		using std::end;
-		return std::equal_range(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::equal_range(begin(storage_), end(storage_), key, comp_);
 	}
 
 	template <class K>
 	std::pair<iterator, iterator> equal_range(const K &key) {
 		using std::begin;
 		using std::end;
-		return std::equal_range(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::equal_range(begin(storage_), end(storage_), key, comp_);
 	}
 
 	template <class K>
 	std::pair<const_iterator, const_iterator> equal_range(const K &key) const {
 		using std::begin;
 		using std::end;
-		return std::equal_range(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::equal_range(begin(storage_), end(storage_), key, comp_);
 	}
 
 public:
 	iterator lower_bound(const Key &key) {
 		using std::begin;
 		using std::end;
-		return std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::lower_bound(begin(storage_), end(storage_), key, comp_);
 	}
 
 	const_iterator lower_bound(const Key &key) const {
 		using std::begin;
 		using std::end;
-		return std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::lower_bound(begin(storage_), end(storage_), key, comp_);
 	}
 
 	template <class K>
 	iterator lower_bound(const K &key) {
 		using std::begin;
 		using std::end;
-		return std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::lower_bound(begin(storage_), end(storage_), key, comp_);
 	}
 
 	template <class K>
 	const_iterator lower_bound(const K &key) const {
 		using std::begin;
 		using std::end;
-		return std::lower_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::lower_bound(begin(storage_), end(storage_), key, comp_);
 	}
 
 public:
 	iterator upper_bound(const Key &key) {
 		using std::begin;
 		using std::end;
-		return std::upper_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::upper_bound(begin(storage_), end(storage_), key, comp_);
 	}
 
 	const_iterator upper_bound(const Key &key) const {
 		using std::begin;
 		using std::end;
-		return std::upper_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::upper_bound(begin(storage_), end(storage_), key, comp_);
 	}
 
 	template <class K>
 	iterator upper_bound(const K &key) {
 		using std::begin;
 		using std::end;
-		return std::upper_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::upper_bound(begin(storage_), end(storage_), key, comp_);
 	}
 
 	template <class K>
 	const_iterator upper_bound(const K &key) const {
 		using std::begin;
 		using std::end;
-		return std::upper_bound(begin(storage_), end(storage_), value_type(key, T()), comp_);
+		return std::upper_bound(begin(storage_), end(storage_), key, comp_);
 	}
 
 public:
