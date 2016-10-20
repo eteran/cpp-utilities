@@ -270,7 +270,7 @@ public:
 
 	template <class M>
 	std::pair<iterator, bool> insert_or_assign(key_type &&key, M &&obj) {
-		auto it = insert(key);
+		auto it = insert(std::move(key));
 		if (it.second) {
 			it.first->second = std::forward<M>(obj);
 		}
