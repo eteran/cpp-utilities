@@ -1,3 +1,5 @@
+// From: https://github.com/eteran/cpp-utilities/edit/master/Fixed.h
+// See also: http://stackoverflow.com/questions/79677/whats-the-best-way-to-do-fixed-point-math
 /*
  * The MIT License (MIT)
  * 
