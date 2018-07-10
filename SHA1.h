@@ -35,18 +35,12 @@ namespace hash {
 
 class SHA1 {
 public:
-	class State {
-		friend class SHA1;
-	public:
-		State() : length_(0), index_(0) {
-		}
-
+	struct State {
 		static constexpr int BlockSize = 64;
 
-	private:
 		uint8_t     block_[BlockSize]; // 512-bit message blocks	
-		uint64_t    length_;           // message length in bits
-		std::size_t index_;            // index into message block array
+		uint64_t    length_ = 0;       // message length in bits
+		std::size_t index_  = 0;       // index into message block array
 	};
 
 	class Digest {

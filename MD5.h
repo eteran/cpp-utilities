@@ -35,18 +35,12 @@ namespace hash {
 
 class MD5 {
 public:
-	class State {
-		friend class MD5;
-	public:
-		State() : length_(0), index_(0) {
-		}
-
+	struct State {
 		static constexpr int BlockSize = 64;
 
-	private:
 		uint8_t  block_[BlockSize]; // input buffer
-		uint64_t length_;           // number of bits
-		size_t   index_;
+		uint64_t length_ = 0;       // number of bits
+		size_t   index_  = 0;
 	};
 
 	class Digest {
