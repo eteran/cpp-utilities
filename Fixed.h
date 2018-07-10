@@ -301,13 +301,9 @@ public: // constructors
 		// TODO(eteran): assert in range!
 	}
 
-	Fixed(const Fixed &o) : data_(o.data_) {
-	}
+	Fixed(const Fixed &o) = default;
 
-	Fixed& operator=(const Fixed &o) {
-		data_ = o.data_;
-		return *this;
-	}
+	Fixed& operator=(const Fixed &o) = default;
 
 private:
 	// this makes it simpler to create a fixed point object from
