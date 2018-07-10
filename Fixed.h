@@ -1,3 +1,5 @@
+// From: https://github.com/eteran/cpp-utilities/edit/master/Fixed.h
+// See also: http://stackoverflow.com/questions/79677/whats-the-best-way-to-do-fixed-point-math
 /*
  * The MIT License (MIT)
  * 
@@ -50,7 +52,7 @@ struct type_from_size {
 	using value_type = void;
 };
 
-#if defined(__GNUC__) && defined(__x86_64__)
+#if defined(__GNUC__) && defined(__x86_64__) && !defined(__STRICT_ANSI__)
 template <>
 struct type_from_size<128> {
 	static constexpr bool   is_specialized = true;
