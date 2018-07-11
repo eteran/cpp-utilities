@@ -49,7 +49,6 @@ namespace detail {
 template <size_t T>
 struct type_from_size {
 	static constexpr bool is_specialized = false;
-	using value_type = void;
 };
 
 #if defined(__GNUC__) && defined(__x86_64__) && !defined(__STRICT_ANSI__)
@@ -113,7 +112,7 @@ struct type_from_size<8> {
 // types (for adding big-int support), this should be fine
 // unless your bit-int class doesn't nicely support casting
 template <class B, class N>
-B next_to_base(const N& rhs) {
+constexpr B next_to_base(const N& rhs) {
 	return static_cast<B>(rhs);
 }
 
@@ -121,11 +120,11 @@ struct divide_by_zero : std::exception {
 };
 
 template <size_t I, size_t F>
-Fixed<I,F> divide(const Fixed<I,F> &numerator, const Fixed<I,F> &denominator, Fixed<I,F> &remainder, typename std::enable_if<type_from_size<I+F>::next_size::is_specialized>::type* = 0) {
+Fixed<I,F> divide(const Fixed<I,F> &numerator, const Fixed<I,F> &denominator, Fixed<I,F> &remainder, typename std::enable_if<type_from_size<I+F>::next_size::is_specialized>::type* = nullptr) {
 
 	using next_type = typename Fixed<I,F>::next_type;
 	using base_type = typename Fixed<I,F>::base_type;
-	static constexpr size_t fractional_bits = Fixed<I,F>::fractional_bits;
+	constexpr size_t fractional_bits = Fixed<I,F>::fractional_bits;
 
 	next_type t(numerator.to_raw());
 	t <<= fractional_bits;
@@ -139,7 +138,7 @@ Fixed<I,F> divide(const Fixed<I,F> &numerator, const Fixed<I,F> &denominator, Fi
 }
 
 template <size_t I, size_t F>
-Fixed<I,F> divide(Fixed<I,F> numerator, Fixed<I,F> denominator, Fixed<I,F> &remainder, typename std::enable_if<!type_from_size<I+F>::next_size::is_specialized>::type* = 0) {
+Fixed<I,F> divide(Fixed<I,F> numerator, Fixed<I,F> denominator, Fixed<I,F> &remainder, typename std::enable_if<!type_from_size<I+F>::next_size::is_specialized>::type* = nullptr) {
 
 	// NOTE(eteran): division is broken for large types :-(
 	// especially when dealing with negative quantities
@@ -147,7 +146,7 @@ Fixed<I,F> divide(Fixed<I,F> numerator, Fixed<I,F> denominator, Fixed<I,F> &rema
 	using base_type     = typename Fixed<I,F>::base_type;
 	using unsigned_type = typename Fixed<I,F>::unsigned_type;
 
-	static constexpr int bits = Fixed<I,F>::total_bits;
+	constexpr int bits = Fixed<I,F>::total_bits;
 
 	if(denominator == 0) {
 		throw divide_by_zero();
@@ -208,15 +207,16 @@ Fixed<I,F> divide(Fixed<I,F> numerator, Fixed<I,F> denominator, Fixed<I,F> &rema
 
 // this is the usual implementation of multiplication
 template <size_t I, size_t F>
-void multiply(const Fixed<I,F> &lhs, const Fixed<I,F> &rhs, Fixed<I,F> &result, typename std::enable_if<type_from_size<I+F>::next_size::is_specialized>::type* = 0) {
+void multiply(const Fixed<I,F> &lhs, const Fixed<I,F> &rhs, Fixed<I,F> &result, typename std::enable_if<type_from_size<I+F>::next_size::is_specialized>::type* = nullptr) {
 
 	using next_type = typename Fixed<I,F>::next_type;
 	using base_type = typename Fixed<I,F>::base_type;
 
-	static constexpr size_t fractional_bits = Fixed<I,F>::fractional_bits;
+	constexpr size_t fractional_bits = Fixed<I,F>::fractional_bits;
 
-	next_type t(static_cast<next_type>(lhs.to_raw()) * static_cast<next_type>(rhs.to_raw()));
+	next_type t (static_cast<next_type>(lhs.to_raw()) * static_cast<next_type>(rhs.to_raw()));
 	t >>= fractional_bits;
+	
 	result = Fixed<I,F>::from_base(next_to_base<base_type>(t));
 }
 
@@ -224,24 +224,24 @@ void multiply(const Fixed<I,F> &lhs, const Fixed<I,F> &rhs, Fixed<I,F> &result, 
 // it is slightly slower, but is more robust since it doesn't
 // require and upgraded type
 template <size_t I, size_t F>
-void multiply(const Fixed<I,F> &lhs, const Fixed<I,F> &rhs, Fixed<I,F> &result, typename std::enable_if<!type_from_size<I+F>::next_size::is_specialized>::type* = 0) {
+void multiply(const Fixed<I,F> &lhs, const Fixed<I,F> &rhs, Fixed<I,F> &result, typename std::enable_if<!type_from_size<I+F>::next_size::is_specialized>::type* = nullptr) {
 
 	using base_type = typename Fixed<I,F>::base_type;
 
-	static constexpr size_t fractional_bits = Fixed<I,F>::fractional_bits;
-	static constexpr size_t integer_mask    = Fixed<I,F>::integer_mask;
-	static constexpr size_t fractional_mask = Fixed<I,F>::fractional_mask;
+	constexpr size_t fractional_bits = Fixed<I,F>::fractional_bits;
+	constexpr size_t integer_mask    = Fixed<I,F>::integer_mask;
+	constexpr size_t fractional_mask = Fixed<I,F>::fractional_mask;
 
 	// more costly but doesn't need a larger type
-	const base_type a_hi = (lhs.to_raw() & integer_mask) >> fractional_bits;
-	const base_type b_hi = (rhs.to_raw() & integer_mask) >> fractional_bits;
-	const base_type a_lo = (lhs.to_raw() & fractional_mask);
-	const base_type b_lo = (rhs.to_raw() & fractional_mask);
+	constexpr base_type a_hi = (lhs.to_raw() & integer_mask) >> fractional_bits;
+	constexpr base_type b_hi = (rhs.to_raw() & integer_mask) >> fractional_bits;
+	constexpr base_type a_lo = (lhs.to_raw() & fractional_mask);
+	constexpr base_type b_lo = (rhs.to_raw() & fractional_mask);
 
-	const base_type x1 = a_hi * b_hi;
-	const base_type x2 = a_hi * b_lo;
-	const base_type x3 = a_lo * b_hi;
-	const base_type x4 = a_lo * b_lo;
+	constexpr base_type x1 = a_hi * b_hi;
+	constexpr base_type x2 = a_hi * b_lo;
+	constexpr base_type x3 = a_lo * b_hi;
+	constexpr base_type x4 = a_lo * b_lo;
 
 	result = Fixed<I,F>::from_base((x1 << fractional_bits) + (x3 + x2) + (x4 >> fractional_bits));
 }
@@ -275,35 +275,17 @@ public:
 	static constexpr base_type one = base_type(1) << fractional_bits;
 
 public: // constructors
-	Fixed() = default;
-
-	Fixed(long n) : data_(base_type(n) << fractional_bits) {
-		// TODO(eteran): assert in range!
-	}
-
-	Fixed(unsigned long n) : data_(base_type(n) << fractional_bits) {
-		// TODO(eteran): assert in range!
-	}
-
-	Fixed(int n) : data_(base_type(n) << fractional_bits) {
-		// TODO(eteran): assert in range!
-	}
-
-	Fixed(unsigned int n) : data_(base_type(n) << fractional_bits) {
-		// TODO(eteran): assert in range!
-	}
-
-	Fixed(float n) : data_(static_cast<base_type>(n * one)) {
-		// TODO(eteran): assert in range!
-	}
-
-	Fixed(double n) : data_(static_cast<base_type>(n * one))  {
-		// TODO(eteran): assert in range!
-	}
-
-	Fixed(const Fixed &o) = default;
-
+	Fixed()                          = default;
+	Fixed(const Fixed &o)            = default;
 	Fixed& operator=(const Fixed &o) = default;
+	
+	template <class Integer>
+	constexpr Fixed(Integer n, typename std::enable_if<std::is_integral<Integer>::value>::type* = nullptr) : data_(base_type(n) << fractional_bits) {
+	}
+
+	template <class Float>
+	constexpr Fixed(Float n, typename std::enable_if<std::is_floating_point<Float>::value>::type* = nullptr) : data_(static_cast<base_type>(n * one)) {
+	}
 
 private:
 	// this makes it simpler to create a fixed point object from
@@ -311,25 +293,25 @@ private:
 	// use "Fixed::from_base" in order to perform this.
 	struct NoScale {};
 
-	Fixed(base_type n, const NoScale &) : data_(n) {
+	constexpr Fixed(base_type n, const NoScale &) : data_(n) {
 	}
 
 public:
-	static Fixed from_base(base_type n) {
+	constexpr static Fixed from_base(base_type n) {
 		return Fixed(n, NoScale());
 	}
 
 public:	// comparison operators
-	bool operator==(const Fixed &o) const {
+	constexpr bool operator==(const Fixed &o) const {
 		return data_ == o.data_;
 	}
 
-	bool operator<(const Fixed &o) const {
+	constexpr bool operator<(const Fixed &o) const {
 		return data_ < o.data_;
 	}
 
 public:	// unary operators
-	bool operator!() const {
+	constexpr bool operator!() const {
 		return !data_;
 	}
 
@@ -345,7 +327,7 @@ public:	// unary operators
 		return t;
 	}
 
-	Fixed operator+() const {
+	constexpr Fixed operator+() const {
 		return *this;
 	}
 
@@ -407,23 +389,23 @@ public:	// basic math operators
 	}
 
 public: // conversion to basic types
-	int to_int() const {
+	constexpr int to_int() const {
 		return (data_ & integer_mask) >> fractional_bits;
 	}
 
-	unsigned int to_uint() const {
+	constexpr unsigned int to_uint() const {
 		return (data_ & integer_mask) >> fractional_bits;
 	}
 
-	float to_float() const {
+	constexpr float to_float() const {
 		return static_cast<float>(data_) / Fixed::one;
 	}
 
-	double to_double() const		{
+	constexpr double to_double() const		{
 		return static_cast<double>(data_) / Fixed::one;
 	}
 
-	base_type to_raw() const {
+	constexpr base_type to_raw() const {
 		return data_;
 	}
 
@@ -447,8 +429,8 @@ typename std::conditional<I1 >= I2, Fixed<I1,F>, Fixed<I2,F>>::type operator+(co
 		Fixed<I2,F>
 	>::type;
 
-	const T l = T::from_base(lhs.to_raw());
-	const T r = T::from_base(rhs.to_raw());
+	constexpr T l = T::from_base(lhs.to_raw());
+	constexpr T r = T::from_base(rhs.to_raw());
 	return l + r;
 }
 
@@ -461,8 +443,8 @@ typename std::conditional<I1 >= I2, Fixed<I1,F>, Fixed<I2,F>>::type operator-(co
 		Fixed<I2,F>
 	>::type;
 
-	const T l = T::from_base(lhs.to_raw());
-	const T r = T::from_base(rhs.to_raw());
+	constexpr T l = T::from_base(lhs.to_raw());
+	constexpr T r = T::from_base(rhs.to_raw());
 	return l - r;
 }
 
@@ -475,8 +457,8 @@ typename std::conditional<I1 >= I2, Fixed<I1,F>, Fixed<I2,F>>::type operator*(co
 		Fixed<I2,F>
 	>::type;
 
-	const T l = T::from_base(lhs.to_raw());
-	const T r = T::from_base(rhs.to_raw());
+	constexpr T l = T::from_base(lhs.to_raw());
+	constexpr T r = T::from_base(rhs.to_raw());
 	return l * r;
 }
 
@@ -489,8 +471,8 @@ typename std::conditional<I1 >= I2, Fixed<I1,F>, Fixed<I2,F>>::type operator/(co
 		Fixed<I2,F>
 	>::type;
 
-	const T l = T::from_base(lhs.to_raw());
-	const T r = T::from_base(rhs.to_raw());
+	constexpr T l = T::from_base(lhs.to_raw());
+	constexpr T r = T::from_base(rhs.to_raw());
 	return l / r;
 }
 

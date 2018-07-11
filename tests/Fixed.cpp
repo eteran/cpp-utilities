@@ -1,10 +1,9 @@
 #include "../Fixed.h"
 #include <iostream>
 
-using fixed = numeric::Fixed<16, 16>;
-fixed f;
+using Fixed = numeric::Fixed<16, 16>;
 
 int main() {
-	f = 10.5f;
+	Fixed f = 10.5f;
 	std::cout << f << std::endl;
 }
