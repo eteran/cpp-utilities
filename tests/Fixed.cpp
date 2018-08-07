@@ -34,7 +34,6 @@ int main() {
 	STATIC_ASSERT14(--Fixed(5) == Fixed(4));
 	STATIC_ASSERT14(Fixed(5)-- == Fixed(5));
 	
-	
 	// test some constexpr comparisons stuff
 	static_assert(Fixed{1} >    Fixed{0}, "");
 	static_assert(Fixed{0.5} <  Fixed{1}, "");
