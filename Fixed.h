@@ -117,7 +117,7 @@ struct type_from_size<8> {
 // types (for adding big-int support), this should be fine
 // unless your bit-int class doesn't nicely support casting
 template <class B, class N>
-constexpr B next_to_base(const N& rhs) {
+constexpr B next_to_base(N rhs) {
 	return static_cast<B>(rhs);
 }
 
@@ -212,7 +212,7 @@ CONSTEXPR14 Fixed<I,F> divide(Fixed<I,F> numerator, Fixed<I,F> denominator, Fixe
 
 // this is the usual implementation of multiplication
 template <size_t I, size_t F>
-CONSTEXPR14 void multiply(Fixed<I, F> lhs, Fixed<I, F> rhs, Fixed<I,F> &result, typename std::enable_if<type_from_size<I+F>::next_size::is_specialized>::type* = nullptr) {
+CONSTEXPR14 Fixed<I,F> multiply(Fixed<I, F> lhs, Fixed<I, F> rhs, typename std::enable_if<type_from_size<I+F>::next_size::is_specialized>::type* = nullptr) {
 
 	using next_type = typename Fixed<I,F>::next_type;
 	using base_type = typename Fixed<I,F>::base_type;
@@ -222,14 +222,14 @@ CONSTEXPR14 void multiply(Fixed<I, F> lhs, Fixed<I, F> rhs, Fixed<I,F> &result, 
 	next_type t (static_cast<next_type>(lhs.to_raw()) * static_cast<next_type>(rhs.to_raw()));
 	t >>= fractional_bits;
 	
-	result = Fixed<I,F>::from_base(next_to_base<base_type>(t));
+	return Fixed<I,F>::from_base(next_to_base<base_type>(t));
 }
 
 // this is the fall back version we use when we don't have a next size
 // it is slightly slower, but is more robust since it doesn't
 // require and upgraded type
 template <size_t I, size_t F>
-CONSTEXPR14 void multiply(Fixed<I, F> lhs, Fixed<I, F> rhs, Fixed<I,F> &result, typename std::enable_if<!type_from_size<I+F>::next_size::is_specialized>::type* = nullptr) {
+CONSTEXPR14 Fixed<I,F> multiply(Fixed<I, F> lhs, Fixed<I, F> rhs, typename std::enable_if<!type_from_size<I+F>::next_size::is_specialized>::type* = nullptr) {
 
 	using base_type = typename Fixed<I,F>::base_type;
 
@@ -248,7 +248,7 @@ CONSTEXPR14 void multiply(Fixed<I, F> lhs, Fixed<I, F> rhs, Fixed<I,F> &result, 
 	constexpr base_type x3 = a_lo * b_hi;
 	constexpr base_type x4 = a_lo * b_lo;
 
-	result = Fixed<I,F>::from_base((x1 << fractional_bits) + (x3 + x2) + (x4 >> fractional_bits));
+	return Fixed<I,F>::from_base((x1 << fractional_bits) + (x3 + x2) + (x4 >> fractional_bits));
 }
 }
 
@@ -382,13 +382,18 @@ public:	// basic math operators
 	}
 
 	CONSTEXPR14 Fixed& operator*=(Fixed n) {
-		detail::multiply(*this, n, *this);
-		return *this;
+		return assign(detail::multiply(*this, n));
 	}
 
 	CONSTEXPR14 Fixed& operator/=(Fixed n) {
 		Fixed temp;
 		*this = detail::divide(*this, n, temp);
+		return *this;
+	}
+	
+private:
+	CONSTEXPR14 Fixed& assign(Fixed rhs) {
+		data_ = rhs.data_;
 		return *this;
 	}
 	
