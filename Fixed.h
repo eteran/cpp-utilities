@@ -396,14 +396,16 @@ public: // binary math operators, effects underlying bit pattern since these
 		data_ ^= n.data_;
 		return *this;
 	}
-
-	CONSTEXPR14 Fixed& operator>>=(Fixed n) {
-		data_ >>= n.to_int();
+	
+	template <class Integer, class = typename std::enable_if<std::is_integral<Integer>::value>::type>
+	CONSTEXPR14 Fixed& operator>>=(Integer n) {
+		data_ >>= n;
 		return *this;
 	}
 
-	CONSTEXPR14 Fixed& operator<<=(Fixed n) {
-		data_ <<= n.to_int();
+	template <class Integer, class = typename std::enable_if<std::is_integral<Integer>::value>::type>
+	CONSTEXPR14 Fixed& operator<<=(Integer n) {
+		data_ <<= n;
 		return *this;
 	}
 
@@ -501,7 +503,7 @@ std::ostream &operator<<(std::ostream &os, Fixed<I, F> f) {
 	return os;
 }
 
-// basic binary math operators
+// basic math operators
 template <size_t I, size_t F> CONSTEXPR14 Fixed<I, F> operator+(Fixed<I, F> lhs, Fixed<I, F> rhs) { lhs += rhs; return lhs; }
 template <size_t I, size_t F> CONSTEXPR14 Fixed<I, F> operator-(Fixed<I, F> lhs, Fixed<I, F> rhs) { lhs -= rhs; return lhs; }
 template <size_t I, size_t F> CONSTEXPR14 Fixed<I, F> operator*(Fixed<I, F> lhs, Fixed<I, F> rhs) { lhs *= rhs; return lhs; }
@@ -516,6 +518,10 @@ template <size_t I, size_t F, class Number, class = typename std::enable_if<std:
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type> CONSTEXPR14 Fixed<I, F> operator-(Number lhs, Fixed<I, F> rhs) { Fixed<I, F> tmp(lhs); tmp -= rhs; return tmp; }
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type> CONSTEXPR14 Fixed<I, F> operator*(Number lhs, Fixed<I, F> rhs) { Fixed<I, F> tmp(lhs); tmp *= rhs; return tmp; }
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type> CONSTEXPR14 Fixed<I, F> operator/(Number lhs, Fixed<I, F> rhs) { Fixed<I, F> tmp(lhs); tmp /= rhs; return tmp; }
+
+// shift operators
+template <size_t I, size_t F, class Integer, class = typename std::enable_if<std::is_integral<Integer>::value>::type> CONSTEXPR14 Fixed<I, F> operator<<(Fixed<I, F> lhs, Integer rhs) { lhs <<= rhs; return lhs; }
+template <size_t I, size_t F, class Integer, class = typename std::enable_if<std::is_integral<Integer>::value>::type> CONSTEXPR14 Fixed<I, F> operator>>(Fixed<I, F> lhs, Integer rhs) { lhs >>= rhs; return lhs; }
 
 // comparison operators
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type> constexpr bool operator>(Fixed<I, F> lhs, Number rhs)  { return lhs > Fixed<I, F>(rhs);  }
