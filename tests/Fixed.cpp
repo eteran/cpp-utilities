@@ -17,6 +17,11 @@ int main() {
 	
 	assert((-Fixed(10))        == -10);
 	
+	assert(++Fixed(5) == Fixed(6));
+	assert(Fixed(5)++ == Fixed(5));
+	assert(--Fixed(5) == Fixed(4));
+	assert(Fixed(5)-- == Fixed(5));
+	
 	
 	// test some constexpr comparisons stuff
 	static_assert(Fixed{1} >    Fixed{0}, "");

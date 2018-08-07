@@ -348,14 +348,26 @@ public:	// unary operators
 		return Fixed::from_base(+data_);
 	}
 
-	CONSTEXPR14 Fixed& operator++() {
+	CONSTEXPR14 Fixed &operator++() {
 		data_ += one;
 		return *this;
 	}
 
-	CONSTEXPR14 Fixed& operator--() {
+	CONSTEXPR14 Fixed &operator--() {
 		data_ -= one;
 		return *this;
+	}
+	
+	CONSTEXPR14 Fixed operator++(int) {
+		Fixed tmp(*this);
+		data_ += one;
+		return tmp;
+	}
+
+	CONSTEXPR14 Fixed operator--(int) {
+		Fixed tmp(*this);
+		data_ -= one;
+		return tmp;
 	}
 
 public:	// basic math operators
