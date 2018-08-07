@@ -4,23 +4,35 @@
 
 using Fixed = numeric::Fixed<16, 16>;
 
+#if __cplusplus >= 201402L
+#define STATIC_ASSERT14(expr) static_assert((expr), "")
+#else
+#define STATIC_ASSERT14(expr) assert((expr))
+#endif
+
 int main() {
 	Fixed f = 10.5f;
 	std::cout << f << std::endl;
 	
-	assert((Fixed(10.5) * 3)          == 31.5);
-	assert((Fixed(10.5) * Fixed(3))   == 31.5);
-	assert((3 * Fixed(10.5))          == 31.5);
-	assert((Fixed(10.5) * 3.0)        == 31.5);
-	assert((Fixed(10.5) * Fixed(3.0)) == 31.5);
-	assert((3.0 * Fixed(10.5))        == 31.5);
+	// TODO(eteran): perform these tests on the bit-patterns, as float comparisons aren't ideal to use
+	STATIC_ASSERT14((Fixed(10.5) * 3)          == 31.5);
+	STATIC_ASSERT14((Fixed(10.5) * Fixed(3))   == 31.5);
+	STATIC_ASSERT14((3 * Fixed(10.5))          == 31.5);
+	STATIC_ASSERT14((Fixed(10.5) * 3.0)        == 31.5);
+	STATIC_ASSERT14((Fixed(10.5) * Fixed(3.0)) == 31.5);
+	STATIC_ASSERT14((3.0 * Fixed(10.5))        == 31.5);
 	
-	assert((-Fixed(10))        == -10);
+	STATIC_ASSERT14(Fixed(50) / Fixed(5) == Fixed(10));
 	
-	assert(++Fixed(5) == Fixed(6));
-	assert(Fixed(5)++ == Fixed(5));
-	assert(--Fixed(5) == Fixed(4));
-	assert(Fixed(5)-- == Fixed(5));
+	STATIC_ASSERT14(-Fixed(10) == -10);
+	STATIC_ASSERT14(+Fixed(10) == +10);
+	
+	STATIC_ASSERT14(-Fixed(10) - 5 == -15);
+	
+	STATIC_ASSERT14(++Fixed(5) == Fixed(6));
+	STATIC_ASSERT14(Fixed(5)++ == Fixed(5));
+	STATIC_ASSERT14(--Fixed(5) == Fixed(4));
+	STATIC_ASSERT14(Fixed(5)-- == Fixed(5));
 	
 	
 	// test some constexpr comparisons stuff

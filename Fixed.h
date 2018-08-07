@@ -279,12 +279,8 @@ public: // constructors
 	Fixed(const Fixed &)            = default;
 	Fixed& operator=(const Fixed &) = default;
 	
-	template <class Integer>
-	constexpr Fixed(Integer n, typename std::enable_if<std::is_integral<Integer>::value>::type* = nullptr) : data_(base_type(n) << fractional_bits) {
-	}
-
-	template <class Float>
-	constexpr Fixed(Float n, typename std::enable_if<std::is_floating_point<Float>::value>::type* = nullptr) : data_(static_cast<base_type>(n * one)) {
+	template <class Number>
+	constexpr Fixed(Number n, typename std::enable_if<std::is_arithmetic<Number>::value>::type* = nullptr) : data_(static_cast<base_type>(n * one)) {
 	}
 
 private:
@@ -386,8 +382,7 @@ public:	// basic math operators
 
 	CONSTEXPR14 Fixed& operator/=(Fixed n) {
 		Fixed temp;
-		*this = detail::divide(*this, n, temp);
-		return *this;
+		return assign(detail::divide(*this, n, temp));
 	}
 	
 private:
