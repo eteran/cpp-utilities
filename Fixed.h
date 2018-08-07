@@ -268,7 +268,6 @@ public:
 	using unsigned_type = typename base_type_info::unsigned_type;
 
 public:
-	static constexpr size_t base_size          = base_type_info::size;
 	static constexpr base_type fractional_mask = ~(static_cast<unsigned_type>(~base_type(0)) << fractional_bits);	
 	static constexpr base_type integer_mask    = ~fractional_mask;
 
