@@ -333,6 +333,10 @@ public:	// unary operators
 	}
 
 	constexpr Fixed operator~() const {
+		// NOTE(eteran): this will often appear to "just negate" the value
+		// that is not an error, it is because -x == (~x+1)
+		// and that "+1" is adding an infinitesimally small fraction to the
+		// complimented value
 		return Fixed::from_base(~data_);
 	}
 
@@ -365,6 +369,19 @@ public:	// basic math operators
 		return *this;
 	}
 
+	CONSTEXPR14 Fixed& operator*=(const Fixed &n) {
+		detail::multiply(*this, n, *this);
+		return *this;
+	}
+
+	CONSTEXPR14 Fixed& operator/=(const Fixed &n) {
+		Fixed temp;
+		*this = detail::divide(*this, n, temp);
+		return *this;
+	}
+	
+public: // binary math operators, effects underlying bit pattern since these 
+        // don't really typically make sense for non-integer values
 	CONSTEXPR14 Fixed& operator&=(const Fixed &n) {
 		data_ &= n.data_;
 		return *this;
@@ -377,17 +394,6 @@ public:	// basic math operators
 
 	CONSTEXPR14 Fixed& operator^=(const Fixed &n) {
 		data_ ^= n.data_;
-		return *this;
-	}
-
-	CONSTEXPR14 Fixed& operator*=(const Fixed &n) {
-		detail::multiply(*this, n, *this);
-		return *this;
-	}
-
-	CONSTEXPR14 Fixed& operator/=(const Fixed &n) {
-		Fixed temp;
-		*this = detail::divide(*this, n, temp);
 		return *this;
 	}
 
