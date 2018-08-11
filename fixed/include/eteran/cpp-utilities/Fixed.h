@@ -1,4 +1,4 @@
-// From: https://github.com/eteran/cpp-utilities/edit/master/Fixed.h
+// From: https://github.com/eteran/cpp-utilities/blob/master/fixed/include/eteran/cpp-utilities/Fixed.h
 // See also: http://stackoverflow.com/questions/79677/whats-the-best-way-to-do-fixed-point-math
 /*
  * The MIT License (MIT)
