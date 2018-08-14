@@ -25,7 +25,6 @@
 #ifndef UTILITY_ARENA_HPP_
 #define UTILITY_ARENA_HPP_
 
-
 #include <bitset>
 #include <cassert>
 #include <cstring>
@@ -34,60 +33,69 @@
 #include <climits>
 #include <eteran/cpp-utilities/bitset.h>
 
+#define ARENA_ALLOCATOR_PURIFY
+
 namespace memory {
 namespace detail {
 
-template <int N, class T>
-constexpr T round_to(T value) {
-	static_assert((N & (N - 1)) == 0, "invalid target rounding value");
-	return ((value + N - 1) & ~(N - 1));
-}
+struct bitset_strategy_tag {};
+struct linked_strategy_tag {};
 
-struct bitset_strategy {};
-struct linked_strategy {};
+// simplify storage management
+template <class T, size_t Count>
+class malloc_storage {
+public:
+	malloc_storage() : p_(reinterpret_cast<T*>(malloc(sizeof(T) * Count))) {
+	}
+	
+	~malloc_storage() {
+		free(p_);
+	}
+	
+	malloc_storage(const malloc_storage &)            = delete;
+	malloc_storage &operator=(const malloc_storage &) = delete;
+	
+	malloc_storage(malloc_storage &&rhs) noexcept : p_(rhs.p_) {
+		rhs.p_ = nullptr;
+	}
+	
+	malloc_storage &operator=(malloc_storage &&rhs) noexcept {
+		p_ = rhs.p_;
+		rhs.p_ = nullptr;
+		return *this;
+	}
+	
+	T &operator[](size_t index) {
+		return p_[index];
+	}
+	
+private:
+	T *p_;
+};
 
-template <size_t Size, size_t Count, class Strategy>
+template <class T, size_t Count, class Strategy>
 class arena_allocator;
 
-template <size_t Size, size_t Count>
-class arena_allocator<Size, Count, bitset_strategy> {
-	// for very small objects, no alignment, you're on your own
-	using T = struct { char bytes[Size]; };
+template <class T, size_t Count>
+class arena_allocator<T, Count, bitset_strategy_tag> {
 public:
-	arena_allocator() : storage_(reinterpret_cast<T*>(malloc(sizeof(T) * Count))) {
+	arena_allocator() {
 		freelist_.set();		
 	}
 	
-	~arena_allocator() {
-		free(storage_);
-	}
-
-public:	
-	arena_allocator(arena_allocator &&other) : storage_(other.storage_), freelist_(other.freelist_) {
-		other.storage_  = nullptr;
-	}
-	
-	arena_allocator &operator=(arena_allocator &&rhs) noexcept {
-		if(this != &rhs) {
-			storage_      = rhs.storage_;
-			freelist_     = rhs.freelist_;
-			rhs.storage_  = nullptr;
-			rhs.freelist_.clear();		
-		}
-		return *this;
-	}	
-	
-private:
-	arena_allocator(const arena_allocator &) = delete;
-	arena_allocator &operator=(const arena_allocator &) = delete;
+	arena_allocator(arena_allocator &&other) noexcept          = default;	
+	arena_allocator &operator=(arena_allocator &&rhs) noexcept = default;
+	arena_allocator(const arena_allocator &)                   = delete;
+	arena_allocator &operator=(const arena_allocator &)        = delete;
+	~arena_allocator()                                         = default;
 	
 public:	
 	void release(void *ptr) noexcept {
 		if(ptr) {
-			assert(ptr >= storage_ && "Attempting to release invalid pointer");
-			assert(ptr < storage_ + Count && "Attempting to release invalid pointer");	
+			assert(ptr >= &storage_[0]     && "Attempting to release invalid pointer");
+			assert(ptr  < &storage_[Count] && "Attempting to release invalid pointer");	
 
-			const int index = (reinterpret_cast<T*>(ptr) - storage_);
+			const int index = (reinterpret_cast<T*>(ptr) - &storage_[0]);
 			
 			assert(!freelist_[index] && "Double free detected");			
 			freelist_.flip(index);
@@ -104,24 +112,22 @@ public:
 		
 		T *const p = &storage_[index];
 		
+#ifdef ARENA_ALLOCATOR_PURIFY
 		// this is the small object allocator, so it's pretty efficient to
 		// always clear out the storage :-)
 		memset(p, 0, sizeof(T));
-		
+#endif
 		return p;
 	}
-
+	
 private:	
-	T*                 storage_;
-	std::bitset<Count> freelist_;
+	malloc_storage<T, Count> storage_;
+	std::bitset<Count>       freelist_;
 };
 
-template <size_t Size, size_t Count>
-class arena_allocator<Size, Count, linked_strategy> {
-	static_assert(Size >= sizeof(void *), "Linked strategy can only be used for objects larger than or equal to the size of a pointer");
-
-private:
-	using T = struct { char bytes[round_to<sizeof(void *)>(Size)]; };
+template <class T, size_t Count>
+class arena_allocator<T, Count, linked_strategy_tag> {
+	static_assert(sizeof(T) >= sizeof(void *), "Linked strategy can only be used for objects larger than or equal to the size of a pointer");
 
 private:
 	struct node {
@@ -129,41 +135,37 @@ private:
 	};
 
 public:
-	arena_allocator() : storage_(reinterpret_cast<T*>(malloc(sizeof(T) * Count))), freelist_(nullptr) {
+	arena_allocator() : freelist_(nullptr) {
 		for(size_t i = 0; i < Count; ++i) {
 			release(&storage_[i]);
 		}
 	}
 	
-	~arena_allocator() {
-		free(storage_);
-	}	
+	~arena_allocator() = default;
 
 public:	
-	arena_allocator(arena_allocator &&other) : storage_(other.storage_), freelist_(other.freelist_) {
-		other.storage_  = nullptr;
+	arena_allocator(arena_allocator &&other) : storage_(std::move(other.storage_)), freelist_(other.freelist_) {
 		other.freelist_ = nullptr;
 	}
 	
 	arena_allocator &operator=(arena_allocator &&rhs) noexcept {
 		if(this != &rhs) {
-			storage_      = rhs.storage_;
+			storage_      = std::move(rhs.storage_);
 			freelist_     = rhs.freelist_;
-			rhs.storage_  = nullptr;
 			rhs.freelist_ = nullptr;		
 		}
 		return *this;
 	}
 	
 private:
-	arena_allocator(const arena_allocator &) = delete;
+	arena_allocator(const arena_allocator &)           = delete;
 	arena_allocator &operator=(const arena_allocator &) = delete;	
 	
 public:	
 	void release(void *ptr) noexcept {
 		if(ptr) {
-			assert(ptr >= storage_ && "Attempting to release invalid pointer");
-			assert(ptr < storage_ + Count && "Attempting to release invalid pointer");
+			assert(ptr >= &storage_[0]     && "Attempting to release invalid pointer");
+			assert(ptr  < &storage_[Count] && "Attempting to release invalid pointer");
 			assert((reinterpret_cast<uintptr_t>(ptr) & (sizeof(void *) - 1)) == 0 && "Attempting to release misaligned pointer");	
 
 			node *const p = reinterpret_cast<node *>(ptr);
@@ -183,27 +185,27 @@ public:
 		
 		node *const p = freelist_;
 		freelist_ = freelist_->next;		
-		
+#ifdef ARENA_ALLOCATOR_PURIFY
 		// avoid information disclosure bug
 		p->next = nullptr;
-		
+#endif
 		return reinterpret_cast<T *>(p);
 	}
 
 private:	
-	T*    storage_;
-	node* freelist_;
+	malloc_storage<T, Count> storage_;
+	node*                    freelist_;
 };
 }
 
-template <size_t Size, size_t Count>
-detail::arena_allocator<Size, Count, detail::linked_strategy> make_arena(typename std::enable_if<Size >= sizeof(void*)>::type* = 0) {
-	return detail::arena_allocator<Size, Count, detail::linked_strategy>();
+template <class T, size_t Count>
+detail::arena_allocator<T, Count, detail::linked_strategy_tag> make_arena(typename std::enable_if<(sizeof(T) >= sizeof(void *)) && (Count > sizeof(size_t) * CHAR_BIT)>::type* = nullptr) {
+	return detail::arena_allocator<T, Count, detail::linked_strategy_tag>();
 }
 
-template <size_t Size, size_t Count>
-detail::arena_allocator<Size, Count, detail::bitset_strategy> make_arena(typename std::enable_if<Size < sizeof(void*)>::type* = 0) {
-	return detail::arena_allocator<Size, Count, detail::bitset_strategy>();
+template <class T, size_t Count>
+detail::arena_allocator<T, Count, detail::bitset_strategy_tag> make_arena(typename std::enable_if<(sizeof(T) < sizeof(void *)) || (Count <= sizeof(size_t) * CHAR_BIT)>::type* = nullptr) {
+	return detail::arena_allocator<T, Count, detail::bitset_strategy_tag>();
 }
 
 }

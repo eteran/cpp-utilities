@@ -2,7 +2,17 @@
 #include <stdint.h>
 
 int main() {
-	auto arena = memory::make_arena<sizeof(uint64_t), 1000>();
-	int *x = static_cast<int *>(arena.allocate()); 
-	arena.release(x);
+
+	using T = uint64_t;
+
+	auto arena = memory::make_arena<T, 4096>();
+	
+	auto x1 = static_cast<T *>(arena.allocate()); 
+	printf("Allocated Address = %p\n", x1);
+
+	auto x2 = static_cast<T *>(arena.allocate()); 
+	printf("Allocated Address = %p\n", x2);
+	
+	arena.release(x1);
+	arena.release(x2);
 }
