@@ -233,9 +233,9 @@ CONSTEXPR14 Fixed<I,F> multiply(Fixed<I, F> lhs, Fixed<I, F> rhs, typename std::
 
 	using base_type = typename Fixed<I,F>::base_type;
 
-	constexpr size_t fractional_bits = Fixed<I,F>::fractional_bits;
-	constexpr size_t integer_mask    = Fixed<I,F>::integer_mask;
-	constexpr size_t fractional_mask = Fixed<I,F>::fractional_mask;
+	constexpr size_t fractional_bits    = Fixed<I,F>::fractional_bits;
+	constexpr base_type integer_mask    = Fixed<I,F>::integer_mask;
+	constexpr base_type fractional_mask = Fixed<I,F>::fractional_mask;
 
 	// more costly but doesn't need a larger type
 	constexpr base_type a_hi = (lhs.to_raw() & integer_mask) >> fractional_bits;
@@ -268,8 +268,15 @@ public:
 	using unsigned_type = typename base_type_info::unsigned_type;
 
 public:
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverflow"
+#endif
 	static constexpr base_type fractional_mask = ~(static_cast<unsigned_type>(~base_type(0)) << fractional_bits);	
 	static constexpr base_type integer_mask    = ~fractional_mask;
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#endif
 
 public:
 	static constexpr base_type one = base_type(1) << fractional_bits;
