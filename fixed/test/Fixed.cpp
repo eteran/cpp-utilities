@@ -13,6 +13,10 @@ using Fixed = numeric::Fixed<16, 16>;
 int main() {
 	Fixed f = 10.5f;
 	std::cout << f << std::endl;
+
+	// TODO(eteran): perform these tests on the bit-patterns, as float conversions aren't ideal to use
+	constexpr numeric::Fixed<8, 8> a8 = 50.25;
+	STATIC_ASSERT14(Fixed(a8) == Fixed(50.25));
 	
 	// TODO(eteran): perform these tests on the bit-patterns, as float comparisons aren't ideal to use
 	STATIC_ASSERT14((Fixed(10.5) * 3)          == 31.5);

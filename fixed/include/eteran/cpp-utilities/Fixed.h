@@ -290,6 +290,17 @@ public: // constructors
 	constexpr Fixed(Number n, typename std::enable_if<std::is_arithmetic<Number>::value>::type* = nullptr) : data_(static_cast<base_type>(n * one)) {
 	}
 
+public: // conversion
+	template <size_t I2, size_t F2>
+	CONSTEXPR14 Fixed(Fixed<I2, F2> other) {
+		static_assert(I2 <= I && F2 <= F, "Scaling conversion can only upgrade types");
+		using T = Fixed<I2,F2>;
+
+		const base_type fractional = (other.data_ & T::fractional_mask);
+		const base_type integer    = (other.data_ & T::integer_mask) >> T::fractional_bits;
+		data_ = (integer << fractional_bits) | (fractional << (fractional_bits - T::fractional_bits));
+	}
+
 private:
 	// this makes it simpler to create a fixed point object from
 	// a native type without scaling
