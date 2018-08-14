@@ -292,7 +292,7 @@ public: // constructors
 
 public: // conversion
 	template <size_t I2, size_t F2>
-	CONSTEXPR14 Fixed(Fixed<I2, F2> other) {
+	CONSTEXPR14 explicit Fixed(Fixed<I2, F2> other) {
 		static_assert(I2 <= I && F2 <= F, "Scaling conversion can only upgrade types");
 		using T = Fixed<I2,F2>;
 
