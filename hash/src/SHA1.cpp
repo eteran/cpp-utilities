@@ -158,6 +158,8 @@ SHA1 &SHA1::append(uint8_t byte) {
 	if(state_.index_ == State::BlockSize) {
     	processMessageBlock(&state_, &digest_);
 	}
+
+	return *this;
 }
 
 //------------------------------------------------------------------------------
@@ -212,6 +214,7 @@ SHA1::Digest SHA1::finalize() const {
 //------------------------------------------------------------------------------
 SHA1 &SHA1::append(const std::string &s) {
 	append(s.begin(), s.end());
+	return *this;
 }
 
 //------------------------------------------------------------------------------
