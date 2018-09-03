@@ -17,6 +17,7 @@ target_link_libraries(
 	"${PROJECT_NAME}"
 	PRIVATE
 		eteran::cpp-utilities::arena
+		eteran::cpp-utilities::defaults
 )
 
 
