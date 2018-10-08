@@ -73,8 +73,10 @@ public:
 	 * @param worker the work to do
 	 */
 	void add_worker(work_type worker) {
-    	std::lock_guard<std::mutex> lock(queue_lock_);
-    	work_queue_.push(worker);
+      {
+        std::lock_guard<std::mutex> lock(queue_lock_);
+        work_queue_.push(std::move(worker));
+      }
     	queue_condition_.notify_one();
 	}
 	
@@ -90,7 +92,7 @@ public:
 			return !work_queue_.empty();
 		});
 
-		work_type val = work_queue_.front();
+		work_type val = std::move(work_queue_.front());
 		work_queue_.pop();
 		return val;
 	}
