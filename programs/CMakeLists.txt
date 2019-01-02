@@ -12,3 +12,9 @@ target_sources(
 		"${CMAKE_CURRENT_LIST_DIR}/byte_writer.cpp"
 )
 
+
+target_link_libraries(
+	"${PROJECT_NAME}"
+	PRIVATE
+		eteran::cpp-utilities::defaults
+)

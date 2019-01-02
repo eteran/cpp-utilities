@@ -21,4 +21,12 @@ target_include_directories(
 		"${CMAKE_CURRENT_LIST_DIR}/include"
 )
 
+
+target_link_libraries(
+	"${PROJECT_NAME}"
+	PRIVATE
+		eteran::cpp-utilities::defaults
+)
+
+
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test")
