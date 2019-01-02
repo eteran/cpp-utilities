@@ -479,8 +479,8 @@ CONSTEXPR14 typename std::conditional<I1 >= I2, Fixed<I1,F>, Fixed<I2,F>>::type 
 		Fixed<I2,F>
 	>::type;
 
-	constexpr T l = T::from_base(lhs.to_raw());
-	constexpr T r = T::from_base(rhs.to_raw());
+	const T l = T::from_base(lhs.to_raw());
+	const T r = T::from_base(rhs.to_raw());
 	return l + r;
 }
 
@@ -493,8 +493,8 @@ CONSTEXPR14 typename std::conditional<I1 >= I2, Fixed<I1,F>, Fixed<I2,F>>::type 
 		Fixed<I2,F>
 	>::type;
 
-	constexpr T l = T::from_base(lhs.to_raw());
-	constexpr T r = T::from_base(rhs.to_raw());
+	const T l = T::from_base(lhs.to_raw());
+	const T r = T::from_base(rhs.to_raw());
 	return l - r;
 }
 
@@ -507,8 +507,8 @@ CONSTEXPR14 typename std::conditional<I1 >= I2, Fixed<I1,F>, Fixed<I2,F>>::type 
 		Fixed<I2,F>
 	>::type;
 
-	constexpr T l = T::from_base(lhs.to_raw());
-	constexpr T r = T::from_base(rhs.to_raw());
+	const T l = T::from_base(lhs.to_raw());
+	const T r = T::from_base(rhs.to_raw());
 	return l * r;
 }
 
@@ -521,8 +521,8 @@ CONSTEXPR14 typename std::conditional<I1 >= I2, Fixed<I1,F>, Fixed<I2,F>>::type 
 		Fixed<I2,F>
 	>::type;
 
-	constexpr T l = T::from_base(lhs.to_raw());
-	constexpr T r = T::from_base(rhs.to_raw());
+	const T l = T::from_base(lhs.to_raw());
+	const T r = T::from_base(rhs.to_raw());
 	return l / r;
 }
 
