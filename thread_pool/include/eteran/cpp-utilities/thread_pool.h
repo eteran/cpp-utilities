@@ -19,8 +19,6 @@ public:
 	/**
 	 * Creates the thread pool with N threads where N is the value of
 	 * std::thread::hardware_concurrency()
-	 *
-	 * @param count The number of threads in the pool
 	 */
 	thread_pool() : thread_pool(std::thread::hardware_concurrency()) {
 	}
