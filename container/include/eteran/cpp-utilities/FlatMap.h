@@ -98,17 +98,20 @@ public:
 		insert(init);
 	}
 
-	~FlatMap() {
-	}
+	~FlatMap() = default;
 
 public:
 	FlatMap &operator=(const FlatMap &other) {
-		FlatMap(other).swap(*this);
+		if(this != &other) {
+			FlatMap(other).swap(*this);
+		}
 		return *this;
 	}
 
 	FlatMap &operator=(FlatMap &&other) {
-		FlatMap(std::move(other)).swap(*this);
+		if(this != &other) {
+			FlatMap(std::move(other)).swap(*this);
+		}
 		return *this;
 	}
 

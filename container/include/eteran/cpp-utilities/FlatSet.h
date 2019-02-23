@@ -82,17 +82,20 @@ public:
 		insert(init);
 	}
 
-	~FlatSet() {
-	}
+	~FlatSet() = default;
 
 public:
 	FlatSet &operator=(const FlatSet &other) {
-		FlatSet(other).swap(*this);
+		if(this != &other) {
+			FlatSet(other).swap(*this);
+		}
 		return *this;
 	}
 
 	FlatSet &operator=(FlatSet &&other) {
-		FlatSet(std::move(other)).swap(*this);
+		if(this != &other) {
+			FlatSet(std::move(other)).swap(*this);
+		}
 		return *this;
 	}
 
