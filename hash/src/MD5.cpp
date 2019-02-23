@@ -47,8 +47,8 @@ constexpr uint32_t I(uint32_t x, uint32_t y, uint32_t z) {
 }
 
 template <class T>
-T rotate(T v, int n) {
-	static constexpr size_t Bits = CHAR_BIT * sizeof(T);
+constexpr T rotate(T v, unsigned int n) {
+	constexpr size_t Bits = CHAR_BIT * sizeof(T);
 	const T Mask = ~(T(-1) << n);
 	return (v << n) | ((v >> (Bits - n)) & Mask);
 }
