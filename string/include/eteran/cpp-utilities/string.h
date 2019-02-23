@@ -76,14 +76,18 @@ inline bool starts_with(const std::string &s, const std::string &prefix) {
 // Name: rtrim
 //------------------------------------------------------------------------------
 inline void rtrim(std::string &s) {
-	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun(safe_ctype<std::isspace>))).base(), s.end());
+	s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+		 return !safe_ctype<std::isspace>(ch);
+	 }).base(), s.end());
 }
 
 //------------------------------------------------------------------------------
 // Name: ltrim
 //------------------------------------------------------------------------------
 inline void ltrim(std::string &s) {
-	s.erase(s.begin(), find_if(s.begin(), s.end(), std::not1(std::ptr_fun(safe_ctype<std::isspace>))));
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+		return !safe_ctype<std::isspace>(ch);
+	}));
 }
 
 //------------------------------------------------------------------------------
@@ -122,14 +126,18 @@ inline std::string trim_copy(std::string &s) {
 // Name: toupper
 //------------------------------------------------------------------------------
 inline void toupper(std::string &s) {
-	std::transform(s.begin(), s.end(), s.begin(), std::ptr_fun<int, int>(std::toupper));
+	std::transform(s.begin(), s.end(), s.begin(), [](int ch) {
+		return std::toupper(ch);
+	});
 }
 
 //------------------------------------------------------------------------------
 // Name: tolower
 //------------------------------------------------------------------------------
 inline void tolower(std::string &s) {
-	std::transform(s.begin(), s.end(), s.begin(), std::ptr_fun<int, int>(std::tolower));
+	std::transform(s.begin(), s.end(), s.begin(), [](int ch) {
+		return std::tolower(ch);
+	});
 }
 
 //------------------------------------------------------------------------------
