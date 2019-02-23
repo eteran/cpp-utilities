@@ -34,8 +34,7 @@
 
 class UUID {
 private:
-	UUID() {
-	}
+	UUID() = default;
 
 public:
 
@@ -53,9 +52,9 @@ public:
 
 		UUID r;
 
-		for(int i = 0; i < 16; ++i) {
+		for(size_t i = 0; i < 16; ++i) {
 			const char ch[3] = { uuid[i * 2], uuid[i * 2 + 1], '\0' };
-			const uint8_t v = strtoul(ch, nullptr, 16);
+			const auto v = static_cast<uint8_t>(strtoul(ch, nullptr, 16));
 			r.v_[i] = v;
 		}
 
@@ -75,18 +74,18 @@ public:
 		std::vector<uint8_t> bin;
 		bin.reserve(16 + name.size());
 
-		for(int i = 0; i < 16; ++i) {
+		for(size_t i = 0; i < 16; ++i) {
 			bin.push_back(ns[i]);
 		}
 
 		for(char ch : name) {
-			bin.push_back(ch);
+			bin.push_back(static_cast<uint8_t>(ch));
 		}
 
 		auto digest = hash::MD5(bin.begin(), bin.end()).finalize();
 		auto bytes = digest.bytes();
 
-		for(int i = 0; i < 16; ++i) {
+		for(size_t i = 0; i < 16; ++i) {
 			r.v_[i] = bytes[i];
 		}
 
@@ -104,22 +103,22 @@ public:
 		std::mt19937 gen(rd());
 		std::uniform_int_distribution<> dis(0x00, 0xff);
 
-		r.v_[0]  = dis(gen);
-		r.v_[1]  = dis(gen);
-		r.v_[2]  = dis(gen);
-		r.v_[3]  = dis(gen);
-		r.v_[4]  = dis(gen);
-		r.v_[5]  = dis(gen);
-		r.v_[6]  = (dis(gen) & 0x0f) | 0x40; // make version 4
-		r.v_[7]  = dis(gen);
-		r.v_[8]  = (dis(gen) & 0x3f) | 0x80; // make version 4
-		r.v_[9]  = dis(gen);
-		r.v_[10] = dis(gen);
-		r.v_[11] = dis(gen);
-		r.v_[12] = dis(gen);
-		r.v_[13] = dis(gen);
-		r.v_[14] = dis(gen);
-		r.v_[15] = dis(gen);
+		r.v_[0]  = static_cast<uint8_t>(dis(gen));
+		r.v_[1]  = static_cast<uint8_t>(dis(gen));
+		r.v_[2]  = static_cast<uint8_t>(dis(gen));
+		r.v_[3]  = static_cast<uint8_t>(dis(gen));
+		r.v_[4]  = static_cast<uint8_t>(dis(gen));
+		r.v_[5]  = static_cast<uint8_t>(dis(gen));
+		r.v_[6]  = static_cast<uint8_t>((dis(gen) & 0x0f) | 0x40); // make version 4
+		r.v_[7]  = static_cast<uint8_t>(dis(gen));
+		r.v_[8]  = static_cast<uint8_t>((dis(gen) & 0x3f) | 0x80); // make version 4
+		r.v_[9]  = static_cast<uint8_t>(dis(gen));
+		r.v_[10] = static_cast<uint8_t>(dis(gen));
+		r.v_[11] = static_cast<uint8_t>(dis(gen));
+		r.v_[12] = static_cast<uint8_t>(dis(gen));
+		r.v_[13] = static_cast<uint8_t>(dis(gen));
+		r.v_[14] = static_cast<uint8_t>(dis(gen));
+		r.v_[15] = static_cast<uint8_t>(dis(gen));
 
 		return r;
 	}
@@ -136,18 +135,18 @@ public:
 		std::vector<uint8_t> bin;
 		bin.reserve(16 + name.size());
 
-		for(int i = 0; i < 16; ++i) {
+		for(size_t i = 0; i < 16; ++i) {
 			bin.push_back(ns[i]);
 		}
 
 		for(char ch : name) {
-			bin.push_back(ch);
+			bin.push_back(static_cast<uint8_t>(ch));
 		}
 
 		auto digest = hash::SHA1(bin.begin(), bin.end()).finalize();
 		auto bytes = digest.bytes();
 
-		for(int i = 0; i < 16; ++i) {
+		for(size_t i = 0; i < 16; ++i) {
 			r.v_[i] = bytes[i];
 		}
 
@@ -289,7 +288,6 @@ public:
 		assert(index < sizeof(v_));
 		return v_[index];
 	}
-
 
 private:
 	uint8_t v_[16];
