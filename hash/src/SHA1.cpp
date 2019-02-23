@@ -63,7 +63,7 @@ void SHA1::swap(SHA1 &other) {
 //------------------------------------------------------------------------------
 void SHA1::processMessageBlock(State *state, Digest *digest) {
 
-	static const uint32_t K[] = {
+	static constexpr uint32_t K[] = {
 		0x5a827999,
 		0x6ed9eba1,
 		0x8f1bbcdc,
