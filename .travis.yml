@@ -1,21 +1,15 @@
+dist: bionic
+
 addons:
   apt:
-    sources:
-      - george-edison55-precise-backports
-      - llvm-toolchain-trusty-6.0
-      - ubuntu-toolchain-r-test
     packages:
-      - clang-6.0
-      - cmake-data
-      - cmake
-      - g++-8
       - libboost-dev
 
 env:
- - CC=clang-6.0 CXX=clang++-6.0 STD=14
- - CC=gcc-8 CXX=g++-8 STD=14
- - CC=clang-6.0 CXX=clang++-6.0 STD=17
- - CC=gcc-8 CXX=g++-8 STD=17
+ - CC=clang CXX=clang++ STD=14
+ - CC=gcc CXX=g++ STD=14
+ - CC=clang CXX=clang++ STD=17
+ - CC=gcc CXX=g++ STD=17
 
 script:
  - cmake -DCMAKE_CXX_STANDARD=$STD .
