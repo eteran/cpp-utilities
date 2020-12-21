@@ -1,5 +1,5 @@
 # cpp-utilities
-Miscellaneous C++11 utility classes and functions
+Miscellaneous C++11/C++14/C++17 utility classes and functions
 
 ### Hash Library
 Found in [MD5.h](hash/include/eteran/cpp-utilities/MD5.h), [MD5.cpp](hash/src/MD5.cpp), [SHA1.h](hash/include/eteran/cpp-utilities/SHA1.h) and [SHA1.cpp](hash/src/SHA1.cpp).
@@ -75,7 +75,7 @@ Of course your compiler will have to have good support for `constexpr` :-).
 
 ### Pretty Printers
 
-[pprint.h](pprint/include/eteran/cpp-utilities/pprint.h) is a set of utility functions to print common c++ data structures in a "pretty" way. Similar to PHP's `print_r()`. Usage looks like this:
+[pprint.h](pprint/include/eteran/cpp-utilities/pprint.h) is a set of utility functions to print common data structures in a "pretty" way. Similar to PHP's `print_r()`. Usage looks like this:
 
 	std::vector<int> v = { 1, 2, 3, 4, 5, 6, 7 };
 	std::cout << pprint::to_string(v) << std::endl;
@@ -121,7 +121,7 @@ Will print:
 ### Fixed Point Math
 [Fixed.h](fixed/include/eteran/cpp-utilities/Fixed.h)
 
-This is a Fixed Point math class for c++11. It supports all combinations which add up to a native data types (8.8/16.16/24.8/etc). The template parameters are the number of bits to use as the base type for both the integer and fractional portions, invalid combinations will yield a compiler error; the current implementation makes use of c++11 `static assert` to make this more readable. It should be a nice drop in replacement for native `float` types. Here's an example usage:
+This is a Fixed Point math class. It supports all combinations which add up to a native data types (8.8/16.16/24.8/etc). The template parameters are the number of bits to use as the base type for both the integer and fractional portions, invalid combinations will yield a compiler error; the current implementation makes use of `static assert` to make this more readable. It should be a nice drop in replacement for native `float` types. Here's an example usage:
 
 	typedef numeric::Fixed<16, 16> fixed;
 	fixed f;
