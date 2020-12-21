@@ -1,9 +1,8 @@
 # https://github.com/eteran/cpp-utilities
 cmake_minimum_required(VERSION 3.5)
-
+project(cpp-utilities LANGUAGES CXX)
 
 enable_testing()
-
 
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/algorithm")
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/arena")
@@ -21,4 +20,3 @@ add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/string")
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/thread_pool")
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/uint128")
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/uuid")
-
