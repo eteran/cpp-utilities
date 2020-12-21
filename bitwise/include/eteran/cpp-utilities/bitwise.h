@@ -38,7 +38,7 @@ namespace bitwise {
  */
 template <class T>
 T rotate_left(T v, int n) {
-	static const unsigned int bits = CHAR_BIT * sizeof(T);
+	constexpr unsigned int bits = CHAR_BIT * sizeof(T);
 	const T mask = ~(T(-1) << n);
 	
 	return (v << n) | ((v >> (bits - n)) & mask);
