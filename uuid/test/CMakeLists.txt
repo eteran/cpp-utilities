@@ -1,25 +1,15 @@
-# eteran / cpp-utilities / uuid / test
 cmake_minimum_required(VERSION 3.5)
 
+add_executable(cpp-utilities-uuid-test
+	UUID.cpp
+)
 
-project("${PROJECT_NAME}-test" CXX)
-add_executable("${PROJECT_NAME}" "")
-
-
-target_sources(
-	"${PROJECT_NAME}"
-	PRIVATE
-		"${CMAKE_CURRENT_LIST_DIR}/UUID.cpp"
+target_link_libraries(cpp-utilities-uuid-test
+PRIVATE
+	cpp-utilities::defaults
+	cpp-utilities::uuid
 )
 
 
-target_link_libraries(
-	"${PROJECT_NAME}"
-	PRIVATE
-		eteran::cpp-utilities::defaults
-		eteran::cpp-utilities::uuid
-)
-
-
-add_test("${PROJECT_NAME}" "${PROJECT_NAME}")
+add_test(cpp-utilities-uuid-test cpp-utilities-uuid-test)
 

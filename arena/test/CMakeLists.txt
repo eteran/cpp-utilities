@@ -1,25 +1,16 @@
-# eteran / cpp-utilities / arena / test
+
 cmake_minimum_required(VERSION 3.5)
 
+add_executable(cpp-utilities-arena-test
+	Arena.cpp
+)
 
-project("${PROJECT_NAME}-test" CXX)
-add_executable("${PROJECT_NAME}" "")
-
-
-target_sources(
-	"${PROJECT_NAME}"
-	PRIVATE
-		"${CMAKE_CURRENT_LIST_DIR}/Arena.cpp"
+target_link_libraries(cpp-utilities-arena-test
+PRIVATE
+	cpp-utilities::arena
+	cpp-utilities::defaults
 )
 
 
-target_link_libraries(
-	"${PROJECT_NAME}"
-	PRIVATE
-		eteran::cpp-utilities::arena
-		eteran::cpp-utilities::defaults
-)
-
-
-add_test("${PROJECT_NAME}" "${PROJECT_NAME}")
+add_test(cpp-utilities-arena-test cpp-utilities-arena-test)
 

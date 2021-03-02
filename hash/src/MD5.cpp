@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include <eteran/cpp-utilities/MD5.h>
+#include <cpp-utilities/MD5.h>
 #include <algorithm>
 #include <climits>
 

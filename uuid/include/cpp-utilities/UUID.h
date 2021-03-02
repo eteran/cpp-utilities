@@ -29,8 +29,8 @@
 #include <random>
 #include <cassert>
 #include <algorithm>
-#include <eteran/cpp-utilities/MD5.h>
-#include <eteran/cpp-utilities/SHA1.h>
+#include <cpp-utilities/MD5.h>
+#include <cpp-utilities/SHA1.h>
 
 class UUID {
 private:

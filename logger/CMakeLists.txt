@@ -1,15 +1,10 @@
-# eteran / cpp-utilities / logger
 cmake_minimum_required(VERSION 3.5)
 
+add_library(cpp-utilities-logger INTERFACE)
+add_library(cpp-utilities::logger ALIAS cpp-utilities-logger)
 
-project("eteran-cpp-utilities-logger" CXX)
-add_library("${PROJECT_NAME}" INTERFACE)
-add_library("eteran::cpp-utilities::logger" ALIAS "${PROJECT_NAME}")
-
-
-target_include_directories(
-	"${PROJECT_NAME}"
-	INTERFACE
-		"${CMAKE_CURRENT_LIST_DIR}/include"
+target_include_directories(cpp-utilities-logger
+INTERFACE
+	${CMAKE_CURRENT_LIST_DIR}/include
 )
 

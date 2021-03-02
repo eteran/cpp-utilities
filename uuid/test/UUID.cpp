@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include <eteran/cpp-utilities/UUID.h>
+#include <cpp-utilities/UUID.h>
 #include <iostream>
 
 int main() {

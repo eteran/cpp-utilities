@@ -1,18 +1,12 @@
-# eteran / cpp-utilities / fixed
 cmake_minimum_required(VERSION 3.5)
 
+add_library(cpp-utilities-fixed INTERFACE)
+add_library(cpp-utilities::fixed ALIAS cpp-utilities-fixed)
 
-project("eteran-cpp-utilities-fixed" CXX)
-add_library("${PROJECT_NAME}" INTERFACE)
-add_library("eteran::cpp-utilities::fixed" ALIAS "${PROJECT_NAME}")
-
-
-target_include_directories(
-	"${PROJECT_NAME}"
-	INTERFACE
-		"${CMAKE_CURRENT_LIST_DIR}/include"
+target_include_directories(cpp-utilities-fixed
+INTERFACE
+	${CMAKE_CURRENT_LIST_DIR}/include
 )
 
-
-add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test")
+add_subdirectory(test)
 

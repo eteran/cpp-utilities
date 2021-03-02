@@ -1,25 +1,13 @@
-# eteran / cpp-utilities / fixed / test
 cmake_minimum_required(VERSION 3.5)
 
-
-project("${PROJECT_NAME}-test" CXX)
-add_executable("${PROJECT_NAME}" "")
-
-
-target_sources(
-	"${PROJECT_NAME}"
-	PRIVATE
-		"${CMAKE_CURRENT_LIST_DIR}/Fixed.cpp"
+add_executable(cpp-utilities-fixed-test 
+	Fixed.cpp
+)
+target_link_libraries(cpp-utilities-fixed-test
+PRIVATE
+	cpp-utilities::defaults
+	cpp-utilities::fixed
 )
 
-
-target_link_libraries(
-	"${PROJECT_NAME}"
-	PRIVATE
-		eteran::cpp-utilities::defaults
-		eteran::cpp-utilities::fixed
-)
-
-
-add_test("${PROJECT_NAME}" "${PROJECT_NAME}")
+add_test(cpp-utilities-fixed-test cpp-utilities-fixed-test)
 

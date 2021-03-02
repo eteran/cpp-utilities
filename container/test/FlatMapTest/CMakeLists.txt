@@ -1,25 +1,14 @@
-# eteran / cpp-utilities / container / test / FlatMapTest
 cmake_minimum_required(VERSION 3.5)
 
-
-project("${PROJECT_NAME}-test-FlatMap" CXX)
-add_executable("${PROJECT_NAME}" "")
-
-
-target_sources(
-	"${PROJECT_NAME}"
-	PRIVATE
-		"${CMAKE_CURRENT_LIST_DIR}/FlatMap.cpp"
+add_executable(cpp-utilities-container-test-FlatMap
+	FlatMap.cpp
 )
 
-
-target_link_libraries(
-	"${PROJECT_NAME}"
-	PRIVATE
-		eteran::cpp-utilities::container
-		eteran::cpp-utilities::defaults
+target_link_libraries(cpp-utilities-container-test-FlatMap
+PRIVATE
+	cpp-utilities::container
+	cpp-utilities::defaults
 )
 
-
-add_test("${PROJECT_NAME}" "${PROJECT_NAME}")
+add_test(cpp-utilities-container-test-FlatMap cpp-utilities-container-test-FlatMap)
 

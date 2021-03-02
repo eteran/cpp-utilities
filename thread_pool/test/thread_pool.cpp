@@ -1,4 +1,4 @@
-#include <eteran/cpp-utilities/thread_pool.h>
+#include <cpp-utilities/thread_pool.h>
 #include <iostream>
 
 int main() {

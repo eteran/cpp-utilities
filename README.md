@@ -2,7 +2,7 @@
 Miscellaneous C++11/C++14/C++17 utility classes and functions
 
 ### Hash Library
-Found in [MD5.h](hash/include/eteran/cpp-utilities/MD5.h), [MD5.cpp](hash/src/MD5.cpp), [SHA1.h](hash/include/eteran/cpp-utilities/SHA1.h) and [SHA1.cpp](hash/src/SHA1.cpp).
+Found in [MD5.h](hash/include/cpp-utilities/MD5.h), [MD5.cpp](hash/src/MD5.cpp), [SHA1.h](hash/include/cpp-utilities/SHA1.h) and [SHA1.cpp](hash/src/SHA1.cpp).
 
 As you might expect, this is an implementation of the MD5 and SHA1 hashing algorithms. The usage of both are identical and designed for ease of use.
 
@@ -16,7 +16,7 @@ As you might expect, this is an implementation of the MD5 and SHA1 hashing algor
 
 ### Arena Allocator
 
-Found in [arena.h](arena/include/eteran/cpp-utilities/arena.h). This is an implementation of a very efficient fixed block size arena allocator. It allows allocating and freeing back to the arena (if you want to, it isn't necessary), and will use one of two strategies depending on the size of blocks you need. If the blocks are smaller than the size of a pointer, and the arena is relatively small, then it will use a bitmap along with compiler intrinsics to find free blocks. If the the blocks are at least as large as a pointer, it will use a freelist implementation. Template deduction will choose the best backend for you.
+Found in [arena.h](arena/include/cpp-utilities/arena.h). This is an implementation of a very efficient fixed block size arena allocator. It allows allocating and freeing back to the arena (if you want to, it isn't necessary), and will use one of two strategies depending on the size of blocks you need. If the blocks are smaller than the size of a pointer, and the arena is relatively small, then it will use a bitmap along with compiler intrinsics to find free blocks. If the the blocks are at least as large as a pointer, it will use a freelist implementation. Template deduction will choose the best backend for you.
 
 Usage is **very** simple:
 
@@ -30,7 +30,7 @@ On my system , the allocate function when using the freelist strategy, allocate 
 
 ### Bitset Utility Functions
 
-Found in [bitset.h](bitset/include/eteran/cpp-utilities/bitset.h). This header provides a nice utility function to find the first set bit in a bitset. When possible using GCC intrinsics to do it in O(1) time, but falling back on an iterative implementation when this is not possible.
+Found in [bitset.h](bitset/include/cpp-utilities/bitset.h). This header provides a nice utility function to find the first set bit in a bitset. When possible using GCC intrinsics to do it in O(1) time, but falling back on an iterative implementation when this is not possible.
 
     std::bitset<32> bs;
     bs[4]  = true;
@@ -42,7 +42,7 @@ The function is defined to return `bitset.size()` when no bits are set, this is 
 
 ### Bitwise Operations
 
-[bitwise.h](bitwise/include/eteran/cpp-utilities/bitwise.h) provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution. Impressively, gcc will often reduce this to a single `rol` instruction when optimizations are enabled!
+[bitwise.h](bitwise/include/cpp-utilities/bitwise.h) provides efficient and type safe rotation operations that will work with any integral type. A future version may be implemented using intrinsics, but for now it's a fairly straight forward shift and mask solution. Impressively, gcc will often reduce this to a single `rol` instruction when optimizations are enabled!
 
     int x = 5;
     int y = bitwise::rotate_right(x, 15);
@@ -50,11 +50,11 @@ The function is defined to return `bitset.size()` when no bits are set, this is 
 
 ### String Utility Functions
 
-[string.h](string/include/eteran/cpp-utilities/string.h) provides several common string functions such as trimming, upper/lower casing, testing what it starts and ends with, etc.
+[string.h](string/include/cpp-utilities/string.h) provides several common string functions such as trimming, upper/lower casing, testing what it starts and ends with, etc.
 
 ### Algorithms
 
-[algorithm.h](algorithm/include/eteran/cpp-utilities/algorithm.h) is a set of algorithms for general purpose use. Currently there are implementations of variadic min and max functions which are compile time. For example:
+[algorithm.h](algorithm/include/cpp-utilities/algorithm.h) is a set of algorithms for general purpose use. Currently there are implementations of variadic min and max functions which are compile time. For example:
 
 	int n = algorithm::static_max(1, 2, 3, 10, 5, 6);
 	printf("%d\n", n); // prints 10
@@ -75,7 +75,7 @@ Of course your compiler will have to have good support for `constexpr` :-).
 
 ### Pretty Printers
 
-[pprint.h](pprint/include/eteran/cpp-utilities/pprint.h) is a set of utility functions to print common data structures in a "pretty" way. Similar to PHP's `print_r()`. Usage looks like this:
+[pprint.h](pprint/include/cpp-utilities/pprint.h) is a set of utility functions to print common data structures in a "pretty" way. Similar to PHP's `print_r()`. Usage looks like this:
 
 	std::vector<int> v = { 1, 2, 3, 4, 5, 6, 7 };
 	std::cout << pprint::to_string(v) << std::endl;
@@ -119,7 +119,7 @@ Will print:
 
 
 ### Fixed Point Math
-[Fixed.h](fixed/include/eteran/cpp-utilities/Fixed.h)
+[Fixed.h](fixed/include/cpp-utilities/Fixed.h)
 
 This is a Fixed Point math class. It supports all combinations which add up to a native data types (8.8/16.16/24.8/etc). The template parameters are the number of bits to use as the base type for both the integer and fractional portions, invalid combinations will yield a compiler error; the current implementation makes use of `static assert` to make this more readable. It should be a nice drop in replacement for native `float` types. Here's an example usage:
 
@@ -130,10 +130,10 @@ This will declare a 16.16 fixed point number. Operators are provided though the 
 
 
 ### Flat associative containers
-[FlatMap.h](container/include/eteran/cpp-utilities/FlatMap.h)
+[FlatMap.h](container/include/cpp-utilities/FlatMap.h)
 
 This is an implementation of a `std::map` but using a contiguous data structure (`std::vector`) as the underlying storage. The elements are stored sorted by key, so lookup should be as efficient as a `binary_search`, and iteration is as efficient as accessing a `std::vector`.
 
-[FlatSet.h](container/include/eteran/cpp-utilities/FlatSet.h)
+[FlatSet.h](container/include/cpp-utilities/FlatSet.h)
 
 This is an implementation of a `std::set` but using a contiguous data structure (`std::vector`) as the underlying storage. The elements are stored sorted by key, so lookup should be as efficient as a `binary_search`, and iteration is as efficient as accessing a `std::vector`.

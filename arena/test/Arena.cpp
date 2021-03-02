@@ -1,4 +1,4 @@
-#include <eteran/cpp-utilities/arena.h>
+#include <cpp-utilities/arena.h>
 #include <stdint.h>
 
 int main() {

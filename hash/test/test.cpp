@@ -1,6 +1,6 @@
 
-#include "eteran/cpp-utilities/SHA1.h"
-#include "eteran/cpp-utilities/MD5.h"
+#include "cpp-utilities/SHA1.h"
+#include "cpp-utilities/MD5.h"
 #include <iostream>
 #include <cassert>
 

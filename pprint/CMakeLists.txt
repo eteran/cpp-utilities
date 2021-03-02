@@ -1,15 +1,10 @@
-# eteran / cpp-utilities / pprint
 cmake_minimum_required(VERSION 3.5)
 
+add_library(cpp-utilities-pprint INTERFACE)
+add_library(cpp-utilities::pprint ALIAS cpp-utilities-pprint)
 
-project("eteran-cpp-utilities-pprint" CXX)
-add_library("${PROJECT_NAME}" INTERFACE)
-add_library("eteran::cpp-utilities::pprint" ALIAS "${PROJECT_NAME}")
-
-
-target_include_directories(
-	"${PROJECT_NAME}"
-	INTERFACE
-		"${CMAKE_CURRENT_LIST_DIR}/include"
+target_include_directories(cpp-utilities-pprint
+INTERFACE
+	${CMAKE_CURRENT_LIST_DIR}/include
 )
 

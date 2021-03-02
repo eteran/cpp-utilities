@@ -1,25 +1,20 @@
-# eteran / cpp-utilities / arena
+
 cmake_minimum_required(VERSION 3.5)
 
+add_library(cpp-utilities-arena INTERFACE)
+add_library(cpp-utilities::arena ALIAS cpp-utilities-arena)
 
-project("eteran-cpp-utilities-arena" CXX)
-add_library("${PROJECT_NAME}" INTERFACE)
-add_library("eteran::cpp-utilities::arena" ALIAS "${PROJECT_NAME}")
-
-
-target_include_directories(
-	"${PROJECT_NAME}"
-	INTERFACE
-		"${CMAKE_CURRENT_LIST_DIR}/include"
+target_include_directories(cpp-utilities-arena
+INTERFACE
+	${CMAKE_CURRENT_LIST_DIR}/include
 )
 
 
-target_link_libraries(
-	"${PROJECT_NAME}"
-	INTERFACE
-		eteran::cpp-utilities::bitset
+target_link_libraries(cpp-utilities-arena
+INTERFACE
+	cpp-utilities::bitset
 )
 
 
-add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test")
+add_subdirectory(test)
 

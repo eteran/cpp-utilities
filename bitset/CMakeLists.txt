@@ -1,15 +1,11 @@
-# eteran / cpp-utilities / bitset
 cmake_minimum_required(VERSION 3.5)
 
-
-project("eteran-cpp-utilities-bitset" CXX)
-add_library("${PROJECT_NAME}" INTERFACE)
-add_library("eteran::cpp-utilities::bitset" ALIAS "${PROJECT_NAME}")
+add_library(cpp-utilities-bitset INTERFACE)
+add_library(cpp-utilities::bitset ALIAS cpp-utilities-bitset)
 
 
-target_include_directories(
-	"${PROJECT_NAME}"
-	INTERFACE
-		"${CMAKE_CURRENT_LIST_DIR}/include"
+target_include_directories(cpp-utilities-bitset
+INTERFACE
+	${CMAKE_CURRENT_LIST_DIR}/include
 )
 

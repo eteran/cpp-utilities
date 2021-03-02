@@ -31,7 +31,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <climits>
-#include <eteran/cpp-utilities/bitset.h>
+#include <cpp-utilities/bitset.h>
 
 #define ARENA_ALLOCATOR_PURIFY
 
