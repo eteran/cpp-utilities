@@ -93,7 +93,7 @@ public:
 
 		// ensure correctness
 		r.v_[6] = (r.v_[6] & 0x0f) | 0x30; // make version 3
-		r.v_[8] = (r.v_[8] & 0x3f) | 0x80;
+		r.v_[8] = (r.v_[8] & 0x3f) | 0x80; // make variant 1
 
 		return r;
 	}
@@ -113,7 +113,7 @@ public:
 		r.v_[5]  = static_cast<uint8_t>(dis(gen));
 		r.v_[6]  = static_cast<uint8_t>((dis(gen) & 0x0f) | 0x40); // make version 4
 		r.v_[7]  = static_cast<uint8_t>(dis(gen));
-		r.v_[8]  = static_cast<uint8_t>((dis(gen) & 0x3f) | 0x80); // make version 4
+		r.v_[8]  = static_cast<uint8_t>((dis(gen) & 0x3f) | 0x80); // make variant 1
 		r.v_[9]  = static_cast<uint8_t>(dis(gen));
 		r.v_[10] = static_cast<uint8_t>(dis(gen));
 		r.v_[11] = static_cast<uint8_t>(dis(gen));
@@ -154,7 +154,7 @@ public:
 
 		// ensure correctness
 		r.v_[6] = (r.v_[6] & 0x0f) | 0x50; // make version 5
-		r.v_[8] = (r.v_[8] & 0x3f) | 0x80;
+		r.v_[8] = (r.v_[8] & 0x3f) | 0x80; // make variant 1
 
 		return r;
 	}
