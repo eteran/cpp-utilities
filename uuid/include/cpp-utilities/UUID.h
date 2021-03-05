@@ -33,12 +33,14 @@
 #include <cpp-utilities/SHA1.h>
 
 class UUID {
-private:
+public:
 	UUID() = default;
+	UUID(const UUID &) = default;
+	UUID& operator=(const UUID &) = default;
 
 public:
 
-	static UUID from_string(std::string uuid) {
+	static UUID from_string(std::string uuid) noexcept {
 
 		assert(is_valid(uuid));
 
@@ -62,7 +64,7 @@ public:
 	}
 
 
-	static UUID v3(const UUID &ns, const std::string &name) {
+	static UUID v3(const UUID &ns, const std::string &name) noexcept {
 
 		// To determine the version 3 UUID of a given name, the UUID of the namespace (e.g., 6ba7b810-9dad-11d1-80b4-00c04fd430c8 for a domain)
 		// is transformed to a string of bytes corresponding to its hexadecimal digits, concatenated with the input name, hashed with
@@ -96,7 +98,7 @@ public:
 		return r;
 	}
 
-	static UUID v4() {
+	static UUID v4() noexcept {
 		UUID r;
 
 		std::random_device rd;
@@ -123,7 +125,7 @@ public:
 		return r;
 	}
 
-	static UUID v5(const UUID &ns, const std::string &name) {
+	static UUID v5(const UUID &ns, const std::string &name) noexcept {
 
 		// To determine the version 5 UUID of a given name, the UUID of the namespace (e.g., 6ba7b810-9dad-11d1-80b4-00c04fd430c8 for a domain)
 		// is transformed to a string of bytes corresponding to its hexadecimal digits, concatenated with the input name, hashed with
@@ -157,7 +159,7 @@ public:
 		return r;
 	}
 
-	static bool is_valid(const std::string &uuid) {
+	static bool is_valid(const std::string &uuid) noexcept {
 
 		bool has_braces  = false;
 		bool has_dashes  = false;
@@ -239,24 +241,34 @@ public:
 		return (digit_index == 32) && (it == uuid.end());
 	}
 
-	int version() const {
+	int version() const noexcept {
 		return (v_[6] >> 4) & 0x0f;
 	}
 
-	bool operator==(const UUID &rhs) const {
+	bool operator==(const UUID &rhs) const noexcept {
 		return std::memcmp(v_, rhs.v_, 16) == 0;
 	}
 
-	bool operator!=(const UUID &rhs) const {
+	bool operator!=(const UUID &rhs) const noexcept {
 		return !(*this == rhs);
 	}
 
-	bool operator<(const UUID &rhs) const {
+	bool operator<(const UUID &rhs) const noexcept {
 		return std::memcmp(v_, rhs.v_, 16) < 0;
+	}
+	
+public:
+	bool is_null() const noexcept {
+		return *this == UUID();
+	}
+	
+	bool is_valid() const noexcept {
+		const int ver = version();
+		return ver >= 1 && ver <= 5;
 	}
 
 public:
-	std::string to_string() const {
+	std::string to_string() const noexcept {
 		char buffer[37];
 		snprintf(buffer, sizeof(buffer), "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
 			v_[0],
@@ -279,18 +291,18 @@ public:
 		return buffer;
 	}
 
-	uint8_t operator[](size_t index) const {
+	uint8_t operator[](size_t index) const noexcept {
 		assert(index < sizeof(v_));
 		return v_[index];
 	}
 
-	uint8_t& operator[](size_t index) {
+	uint8_t& operator[](size_t index) noexcept {
 		assert(index < sizeof(v_));
 		return v_[index];
 	}
 
 private:
-	uint8_t v_[16];
+	uint8_t v_[16] = {};
 };
 
 #endif

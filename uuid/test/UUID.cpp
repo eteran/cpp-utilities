@@ -23,17 +23,22 @@
  */
 
 #include <cpp-utilities/UUID.h>
-#include <iostream>
+#include <string>
 
 int main() {
 
 	auto ns   = UUID::from_string("{6ba7b810-9dad-11d1-80b4-00c04fd430c8}");
 	auto uuid = UUID::v4();
 	
-	std::cout << uuid.to_string() << std::endl;
-	std::cout << uuid.version() << std::endl;
+	assert(!uuid.is_null());
+	assert(uuid.is_valid());
+	assert(uuid.version() == 4);
 	
-	std::cout << UUID::is_valid(uuid.to_string()) << std::endl;
+	assert(UUID::is_valid(uuid.to_string()));
+	
+	UUID uuid2;
+	assert(uuid2.is_null());
+	assert(!uuid2.is_valid());
 
 
 }
