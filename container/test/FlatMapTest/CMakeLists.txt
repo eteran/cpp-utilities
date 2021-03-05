@@ -10,5 +10,8 @@ PRIVATE
 	cpp-utilities::defaults
 )
 
-add_test(cpp-utilities-container-test-FlatMap cpp-utilities-container-test-FlatMap)
+add_test(
+	NAME cpp-utilities-container-test-FlatMap
+	COMMAND $<TARGET_FILE:cpp-utilities-container-test-FlatMap>
+)
 

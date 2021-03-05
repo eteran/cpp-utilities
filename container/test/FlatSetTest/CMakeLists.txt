@@ -10,5 +10,7 @@ PRIVATE
 	cpp-utilities::defaults
 )
 
-add_test(cpp-utilities-container-test-FlatSet cpp-utilities-container-test-FlatSet)
-
+add_test(
+	NAME cpp-utilities-container-test-FlatSet
+	COMMAND $<TARGET_FILE:cpp-utilities-container-test-FlatSet>
+)

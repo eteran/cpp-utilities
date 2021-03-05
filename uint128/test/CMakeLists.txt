@@ -14,6 +14,8 @@ PRIVATE
 	Boost::boost
 )
 
-
-add_test(cpp-utilities-uint128-test cpp-utilities-uint128-test)
+add_test(
+	NAME cpp-utilities-uint128-test
+	COMMAND $<TARGET_FILE:cpp-utilities-uint128-test>
+)
 

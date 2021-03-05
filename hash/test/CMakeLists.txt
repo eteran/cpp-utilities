@@ -10,5 +10,8 @@ PRIVATE
 	cpp-utilities::hash
 )
 
-add_test(cpp-utilities-hash-test cpp-utilities-hash-test)
+add_test(
+	NAME cpp-utilities-hash-test
+	COMMAND $<TARGET_FILE:cpp-utilities-hash-test>
+)
 

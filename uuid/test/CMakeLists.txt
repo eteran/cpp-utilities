@@ -10,6 +10,8 @@ PRIVATE
 	cpp-utilities::uuid
 )
 
-
-add_test(cpp-utilities-uuid-test cpp-utilities-uuid-test)
+add_test(
+	NAME cpp-utilities-uuid-test
+	COMMAND $<TARGET_FILE:cpp-utilities-uuid-test>
+)
 

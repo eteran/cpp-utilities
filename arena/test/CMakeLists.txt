@@ -12,5 +12,8 @@ PRIVATE
 )
 
 
-add_test(cpp-utilities-arena-test cpp-utilities-arena-test)
+add_test(
+	NAME cpp-utilities-arena-test
+	COMMAND $<TARGET_FILE:cpp-utilities-arena-test>
+)
 

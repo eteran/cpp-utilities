@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_executable(cpp-utilities-thread_pool-test 
+add_executable(cpp-utilities-thread_pool-test
 	thread_pool.cpp
 )
 
@@ -13,5 +13,8 @@ PRIVATE
 	Threads::Threads
 )
 
-add_test(cpp-utilities-thread_pool-test cpp-utilities-thread_pool-test)
+add_test(
+	NAME cpp-utilities-thread_pool-test
+	COMMAND $<TARGET_FILE:cpp-utilities-thread_pool-test>
+)
 
