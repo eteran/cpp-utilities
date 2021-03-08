@@ -23,6 +23,7 @@
  */
 
 #include <cpp-utilities/MD5.h>
+#include <cpp-utilities/bitwise.h>
 #include <algorithm>
 #include <climits>
 
@@ -46,17 +47,10 @@ constexpr uint32_t I(uint32_t x, uint32_t y, uint32_t z) {
 	return y ^ (x | ~z);
 }
 
-template <class T>
-constexpr T rotate(T v, unsigned int n) {
-	constexpr size_t Bits = CHAR_BIT * sizeof(T);
-	const T Mask = ~(T(-1) << n);
-	return (v << n) | ((v >> (Bits - n)) & Mask);
-}
-
 template <class Func>
 uint32_t xfrm(Func f, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uint32_t s, uint32_t ac) {
 	a += f(b, c, d) + x + ac;
-	a = rotate(a, s) + b;
+	a = bitwise::rotate_left(a, s) + b;
 	return a;
 }
 
@@ -288,10 +282,10 @@ MD5 &MD5::operator<<(uint8_t byte) {
 //------------------------------------------------------------------------------
 std::string MD5::Digest::to_string() const {
 	static const char hexchars[] = "0123456789abcdef";
-	
+
 	std::string str;
 	str.reserve(32);
-	
+
 	auto p = std::back_inserter(str);
 
 	for(int i = 0; i < 4; ++i) {

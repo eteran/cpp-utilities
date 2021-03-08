@@ -34,6 +34,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <unordered_set>
 
 
 namespace pprint {
@@ -43,6 +45,9 @@ template <class T> std::string to_string(const std::vector<T> &c, int indent);
 template <class T> std::string to_string(const std::list<T> &c, int indent);
 template <class T> std::string to_string(const std::deque<T> &c, int indent);
 template <class T> std::string to_string(const std::set<T> &c, int indent);
+template <class T> std::string to_string(const std::unordered_set<T> &c, int indent);
+
+template <class T1, class T2> std::string to_string(const std::unordered_map<T1, T2> &c, int indent);
 template <class T1, class T2> std::string to_string(const std::map<T1, T2> &c, int indent);
 
 std::string to_string(const std::string &s, int = 0) {
@@ -105,9 +110,19 @@ std::string to_string(const std::map<T1, T2> &c, int indent) {
 	return to_string_assoc_container("std::map<>", c, indent);
 }
 
+template <class T1, class T2>
+std::string to_string(const std::unordered_map<T1, T2> &c, int indent) {
+	return to_string_assoc_container("std::unordered_map<>", c, indent);
+}
+
 template <class T>
 std::string to_string(const std::set<T> &c, int indent) {
 	return to_string_container("std::set<>", c, indent);
+}
+
+template <class T>
+std::string to_string(const std::unordered_set<T> &c, int indent) {
+	return to_string_container("std::unordered_set<>", c, indent);
 }
 
 }
@@ -132,11 +147,20 @@ std::string to_string(const std::set<T> &c) {
 	return detail::to_string<T>(c, 0);
 }
 
+template <class T>
+std::string to_string(const std::unordered_set<T> &c) {
+	return detail::to_string<T>(c, 0);
+}
+
 template <class T1, class T2>
 std::string to_string(const std::map<T1, T2> &c) {
 	return detail::to_string<T1, T2>(c, 0);
 }
 
+template <class T1, class T2>
+std::string to_string(const std::unordered_map<T1, T2> &c) {
+	return detail::to_string<T1, T2>(c, 0);
+}
 
 }
 

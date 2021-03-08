@@ -17,6 +17,7 @@ PUBLIC
 target_link_libraries(cpp-utilities-hash
 PRIVATE
 	cpp-utilities::defaults
+	cpp-utilities::bitwise
 )
 
 add_subdirectory(test)

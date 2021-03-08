@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Evan Teran
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 #ifndef UTILITY_ARENA_HPP_
 #define UTILITY_ARENA_HPP_
 
@@ -45,32 +45,32 @@ struct linked_strategy_tag {};
 template <class T, size_t Count>
 class malloc_storage {
 public:
-	malloc_storage() : p_(reinterpret_cast<T*>(malloc(sizeof(T) * Count))) {
+	malloc_storage() noexcept : p_(reinterpret_cast<T*>(malloc(sizeof(T) * Count))) {
 	}
-	
-	~malloc_storage() {
+
+	~malloc_storage() noexcept {
 		free(p_);
 	}
-	
+
 	malloc_storage(const malloc_storage &)            = delete;
 	malloc_storage &operator=(const malloc_storage &) = delete;
-	
+
 	malloc_storage(malloc_storage &&rhs) noexcept : p_(rhs.p_) {
 		rhs.p_ = nullptr;
 	}
-	
+
 	malloc_storage &operator=(malloc_storage &&rhs) noexcept {
 		p_ = rhs.p_;
 		rhs.p_ = nullptr;
 		return *this;
 	}
-	
-	T &operator[](size_t index) {
+
+	T &operator[](size_t index) noexcept {
 		return p_[index];
 	}
-	
+
 private:
-	T *p_;
+	T *p_ = nullptr;
 };
 
 template <class T, size_t Count, class Strategy>
@@ -79,39 +79,39 @@ class arena_allocator;
 template <class T, size_t Count>
 class arena_allocator<T, Count, bitset_strategy_tag> {
 public:
-	arena_allocator() {
-		freelist_.set();		
+	arena_allocator() noexcept {
+		freelist_.set();
 	}
-	
-	arena_allocator(arena_allocator &&other) noexcept          = default;	
+
+	arena_allocator(arena_allocator &&other) noexcept          = default;
 	arena_allocator &operator=(arena_allocator &&rhs) noexcept = default;
 	arena_allocator(const arena_allocator &)                   = delete;
 	arena_allocator &operator=(const arena_allocator &)        = delete;
 	~arena_allocator()                                         = default;
-	
-public:	
+
+public:
 	void release(void *ptr) noexcept {
 		if(ptr) {
 			assert(ptr >= &storage_[0]     && "Attempting to release invalid pointer");
-			assert(ptr  < &storage_[Count] && "Attempting to release invalid pointer");	
+			assert(ptr  < &storage_[Count] && "Attempting to release invalid pointer");
 
 			const int index = (reinterpret_cast<T*>(ptr) - &storage_[0]);
-			
-			assert(!freelist_[index] && "Double free detected");			
+
+			assert(!freelist_[index] && "Double free detected");
 			freelist_.flip(index);
 		}
 	}
-	
+
 	void *allocate() noexcept {
 		const int index = bitset::find_first(freelist_);
 		if(index == Count) {
 			return nullptr;
 		}
-		
+
 		freelist_[index].flip();
-		
+
 		T *const p = &storage_[index];
-		
+
 #ifdef ARENA_ALLOCATOR_PURIFY
 		// this is the small object allocator, so it's pretty efficient to
 		// always clear out the storage :-)
@@ -119,8 +119,8 @@ public:
 #endif
 		return p;
 	}
-	
-private:	
+
+private:
 	malloc_storage<T, Count> storage_;
 	std::bitset<Count>       freelist_;
 };
@@ -135,38 +135,38 @@ private:
 	};
 
 public:
-	arena_allocator() : freelist_(nullptr) {
+	arena_allocator() noexcept : freelist_(nullptr) {
 		for(size_t i = 0; i < Count; ++i) {
 			release(&storage_[i]);
 		}
 	}
-	
+
 	~arena_allocator() = default;
 
-public:	
+public:
 	arena_allocator(arena_allocator &&other) : storage_(std::move(other.storage_)), freelist_(other.freelist_) {
 		other.freelist_ = nullptr;
 	}
-	
+
 	arena_allocator &operator=(arena_allocator &&rhs) noexcept {
 		if(this != &rhs) {
 			storage_      = std::move(rhs.storage_);
 			freelist_     = rhs.freelist_;
-			rhs.freelist_ = nullptr;		
+			rhs.freelist_ = nullptr;
 		}
 		return *this;
 	}
-	
+
 private:
-	arena_allocator(const arena_allocator &)           = delete;
-	arena_allocator &operator=(const arena_allocator &) = delete;	
-	
-public:	
+	arena_allocator(const arena_allocator &)            = delete;
+	arena_allocator &operator=(const arena_allocator &) = delete;
+
+public:
 	void release(void *ptr) noexcept {
 		if(ptr) {
 			assert(ptr >= &storage_[0]     && "Attempting to release invalid pointer");
 			assert(ptr  < &storage_[Count] && "Attempting to release invalid pointer");
-			assert((reinterpret_cast<uintptr_t>(ptr) & (sizeof(void *) - 1)) == 0 && "Attempting to release misaligned pointer");	
+			assert((reinterpret_cast<uintptr_t>(ptr) & (sizeof(void *) - 1)) == 0 && "Attempting to release misaligned pointer");
 
 			node *const p = reinterpret_cast<node *>(ptr);
 
@@ -177,14 +177,14 @@ public:
 			freelist_ = p;
 		}
 	}
-	
+
 	void *allocate() noexcept {
 		if(!freelist_) {
 			return nullptr;
 		}
-		
+
 		node *const p = freelist_;
-		freelist_ = freelist_->next;		
+		freelist_ = freelist_->next;
 #ifdef ARENA_ALLOCATOR_PURIFY
 		// avoid information disclosure bug
 		p->next = nullptr;
@@ -192,7 +192,7 @@ public:
 		return reinterpret_cast<T *>(p);
 	}
 
-private:	
+private:
 	malloc_storage<T, Count> storage_;
 	node*                    freelist_;
 };

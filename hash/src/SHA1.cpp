@@ -23,21 +23,11 @@
  */
 
 #include <cpp-utilities/SHA1.h>
+#include <cpp-utilities/bitwise.h>
 #include <algorithm>
 #include <climits>
 
 using namespace hash;
-
-namespace {
-
-template <class T>
-constexpr T rotate(T v, unsigned int n) {
-	constexpr size_t Bits = CHAR_BIT * sizeof(T);
-	const T Mask = ~(T(-1) << n);
-	return (v << n) | ((v >> (Bits - n)) & Mask);
-}
-
-}
 
 //------------------------------------------------------------------------------
 // Name: MD5
@@ -53,7 +43,7 @@ SHA1::SHA1(const std::string &s) {
 void SHA1::swap(SHA1 &other) {
 
 	using std::swap;
-	
+
 	swap(digest_, other.digest_);
 	swap(state_, other.state_);
 }
@@ -69,7 +59,7 @@ void SHA1::processMessageBlock(State *state, Digest *digest) {
 		0x8f1bbcdc,
 		0xca62c1d6
 	};
-	
+
 	uint32_t W[80]; // Word sequence
 
 	//  Initialize the first 16 words in the array W
@@ -82,17 +72,17 @@ void SHA1::processMessageBlock(State *state, Digest *digest) {
 
 #if 0
 	for(int t = 16; t < 80; ++t) {
-		W[t] = rotate(W[t-3] ^ W[t-8] ^ W[t-14] ^ W[t-16], 1);
+		W[t] = bitwise::rotate_left(W[t-3] ^ W[t-8] ^ W[t-14] ^ W[t-16], 1);
 	}
 #else
-	// slight improvement if we attempt to do vectorization: 
+	// slight improvement if we attempt to do vectorization:
 	// http://software.intel.com/en-us/articles/improving-the-performance-of-the-secure-hash-algorithm-1/
 	for(int t = 16; t < 32; ++t) {
-		W[t] = rotate(W[t-3] ^ W[t-8] ^ W[t-14] ^ W[t-16], 1);
+		W[t] = bitwise::rotate_left(W[t-3] ^ W[t-8] ^ W[t-14] ^ W[t-16], 1);
 	}
-	
+
 	for(int t = 32; t < 80; ++t) {
-		W[t] = rotate(W[t-6] ^ W[t-16] ^ W[t-28] ^ W[t-32], 2);
+		W[t] = bitwise::rotate_left(W[t-6] ^ W[t-16] ^ W[t-28] ^ W[t-32], 2);
 	}
 #endif
 
@@ -103,37 +93,37 @@ void SHA1::processMessageBlock(State *state, Digest *digest) {
 	uint32_t E = digest->h_[4];
 
 	for(int t = 0; t < 20; ++t) {
-		const uint32_t temp = rotate(A, 5) + ((B & C) | ((~B) & D)) + E + W[t] + K[0];
+		const uint32_t temp = bitwise::rotate_left(A, 5) + ((B & C) | ((~B) & D)) + E + W[t] + K[0];
 		E = D;
 		D = C;
-		C = rotate(B, 30);
+		C = bitwise::rotate_left(B, 30);
 		B = A;
 		A = temp;
 	}
 
 	for(int t = 20; t < 40; ++t) {
-		const uint32_t temp = rotate(A, 5) + (B ^ C ^ D) + E + W[t] + K[1];
+		const uint32_t temp = bitwise::rotate_left(A, 5) + (B ^ C ^ D) + E + W[t] + K[1];
 		E = D;
 		D = C;
-		C = rotate(B, 30);
+		C = bitwise::rotate_left(B, 30);
 		B = A;
 		A = temp;
 	}
 
 	for(int t = 40; t < 60; ++t) {
-		const uint32_t temp = rotate(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[t] + K[2];
+		const uint32_t temp = bitwise::rotate_left(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[t] + K[2];
 		E = D;
 		D = C;
-		C = rotate(B, 30);
+		C = bitwise::rotate_left(B, 30);
 		B = A;
 		A = temp;
 	}
 
 	for(int t = 60; t < 80; ++t) {
-		const uint32_t temp = rotate(A, 5) + (B ^ C ^ D) + E + W[t] + K[3];
+		const uint32_t temp = bitwise::rotate_left(A, 5) + (B ^ C ^ D) + E + W[t] + K[3];
 		E = D;
 		D = C;
-		C = rotate(B, 30);
+		C = bitwise::rotate_left(B, 30);
 		B = A;
 		A = temp;
 	}
@@ -177,7 +167,7 @@ SHA1::Digest SHA1::finalize() const {
 	// make copies so this isn't a mutating operation
 	State  s = state_;
 	Digest d = digest_;
-	
+
 	s.block_[s.index_] = 0x80;
 
 	const size_t n = s.index_++;
@@ -189,10 +179,10 @@ SHA1::Digest SHA1::finalize() const {
 
         processMessageBlock(&s, &d);
     }
-	
+
     while(s.index_ < 56) {
         s.block_[s.index_++] = 0;
-    }	
+    }
 
 	// Store the message length as the last 8 octets
     s.block_[56] = (s.length_ >> 56) & 0xff;
@@ -204,7 +194,7 @@ SHA1::Digest SHA1::finalize() const {
     s.block_[62] = (s.length_ >> 8 ) & 0xff;
     s.block_[63] = (s.length_      ) & 0xff;
     processMessageBlock(&s, &d);
-	
+
 	return d;
 }
 
@@ -226,7 +216,7 @@ std::string SHA1::Digest::to_string() const {
 	static const char hexchars[] = "0123456789abcdef";
 	std::string str;
 	str.reserve(40);
-	
+
 	auto p = std::back_inserter(str);
 
 	for(int i = 0; i < 5; ++i) {

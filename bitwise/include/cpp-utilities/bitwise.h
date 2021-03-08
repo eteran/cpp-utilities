@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Evan Teran
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 #ifndef UTILITIES_BITWISE_HPP_
 #define UTILITIES_BITWISE_HPP_
 
@@ -30,22 +30,22 @@
 namespace bitwise {
 
 /*
- *  the reason why we need the "mask" constant is 
+ *  the reason why we need the "mask" constant is
  *  because some platforms make >> on negative values
  *  arithmetic (which shifts in the sign bit, not 0)
- *  using the mask allows this to work with both signed 
+ *  using the mask allows this to work with both signed
  *  and unsigned types
  */
 template <class T>
-T rotate_left(T v, int n) {
+T rotate_left(T v, int n) noexcept {
 	constexpr unsigned int bits = CHAR_BIT * sizeof(T);
 	const T mask = ~(T(-1) << n);
-	
+
 	return (v << n) | ((v >> (bits - n)) & mask);
 }
 
 template <class T>
-T rotate_right(T v, int n) {
+T rotate_right(T v, int n) noexcept {
 	return rotate_left(v, -n);
 }
 
