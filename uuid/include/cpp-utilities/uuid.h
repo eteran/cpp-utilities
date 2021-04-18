@@ -32,30 +32,30 @@
 #include <cpp-utilities/md5.h>
 #include <cpp-utilities/sha1.h>
 
-class UUID {
+class uuid {
 public:
-	UUID() = default;
-	UUID(const UUID &) = default;
-	UUID& operator=(const UUID &) = default;
+	uuid() = default;
+	uuid(const uuid &) = default;
+	uuid& operator=(const uuid &) = default;
 
 public:
 
-	static UUID from_string(std::string uuid) noexcept {
+	static uuid from_string(std::string str) noexcept {
 
-		assert(is_valid(uuid));
+		assert(is_valid(str));
 
 		// once we know it's valid, we can just strip out the optional
 		// stuff we don't really need
-		uuid.erase(std::remove(uuid.begin(), uuid.end(), '{'), uuid.end());
-		uuid.erase(std::remove(uuid.begin(), uuid.end(), '}'), uuid.end());
-		uuid.erase(std::remove(uuid.begin(), uuid.end(), '-'), uuid.end());
+		str.erase(std::remove(str.begin(), str.end(), '{'), str.end());
+		str.erase(std::remove(str.begin(), str.end(), '}'), str.end());
+		str.erase(std::remove(str.begin(), str.end(), '-'), str.end());
 
-		assert(uuid.size() == 32);
+		assert(str.size() == 32);
 
-		UUID r;
+		uuid r;
 
 		for(size_t i = 0; i < 16; ++i) {
-			const char ch[3] = { uuid[i * 2], uuid[i * 2 + 1], '\0' };
+			const char ch[3] = { str[i * 2], str[i * 2 + 1], '\0' };
 			const auto v = static_cast<uint8_t>(strtoul(ch, nullptr, 16));
 			r.v_[i] = v;
 		}
@@ -64,14 +64,14 @@ public:
 	}
 
 
-	static UUID v3(const UUID &ns, const std::string &name) noexcept {
+	static uuid v3(const uuid &ns, const std::string &name) noexcept {
 
-		// To determine the version 3 UUID of a given name, the UUID of the namespace (e.g., 6ba7b810-9dad-11d1-80b4-00c04fd430c8 for a domain)
+		// To determine the version 3 uuid of a given name, the uuid of the namespace (e.g., 6ba7b810-9dad-11d1-80b4-00c04fd430c8 for a domain)
 		// is transformed to a string of bytes corresponding to its hexadecimal digits, concatenated with the input name, hashed with
 		// MD5 yielding 128 bits. Six bits are replaced by fixed values, four of these bits indicate the version, 0011 for version 3. Finally,
-		// the fixed hash is transformed back into the hexadecimal form with hyphens separating the parts relevant in other UUID versions.
+		// the fixed hash is transformed back into the hexadecimal form with hyphens separating the parts relevant in other uuid versions.
 
-		UUID r;
+		uuid r;
 
 		std::vector<uint8_t> bin;
 		bin.reserve(16 + name.size());
@@ -98,8 +98,8 @@ public:
 		return r;
 	}
 
-	static UUID v4() noexcept {
-		UUID r;
+	static uuid v4() noexcept {
+		uuid r;
 
 		std::random_device rd;
 		std::mt19937 gen(rd());
@@ -125,14 +125,14 @@ public:
 		return r;
 	}
 
-	static UUID v5(const UUID &ns, const std::string &name) noexcept {
+	static uuid v5(const uuid &ns, const std::string &name) noexcept {
 
-		// To determine the version 5 UUID of a given name, the UUID of the namespace (e.g., 6ba7b810-9dad-11d1-80b4-00c04fd430c8 for a domain)
+		// To determine the version 5 uuid of a given name, the uuid of the namespace (e.g., 6ba7b810-9dad-11d1-80b4-00c04fd430c8 for a domain)
 		// is transformed to a string of bytes corresponding to its hexadecimal digits, concatenated with the input name, hashed with
 		// sha1 yielding 160 bits. Six bits are replaced by fixed values, four of these bits indicate the version, 0011 for version 5. Finally,
-		// the first 128 bits of the fixed hash is transformed back into the hexadecimal form with hyphens separating the parts relevant in other UUID versions.
+		// the first 128 bits of the fixed hash is transformed back into the hexadecimal form with hyphens separating the parts relevant in other uuid versions.
 
-		UUID r;
+		uuid r;
 
 		std::vector<uint8_t> bin;
 		bin.reserve(16 + name.size());
@@ -245,21 +245,21 @@ public:
 		return (v_[6] >> 4) & 0x0f;
 	}
 
-	bool operator==(const UUID &rhs) const noexcept {
+	bool operator==(const uuid &rhs) const noexcept {
 		return std::memcmp(v_, rhs.v_, 16) == 0;
 	}
 
-	bool operator!=(const UUID &rhs) const noexcept {
+	bool operator!=(const uuid &rhs) const noexcept {
 		return !(*this == rhs);
 	}
 
-	bool operator<(const UUID &rhs) const noexcept {
+	bool operator<(const uuid &rhs) const noexcept {
 		return std::memcmp(v_, rhs.v_, 16) < 0;
 	}
 	
 public:
 	bool is_null() const noexcept {
-		return *this == UUID();
+		return *this == uuid();
 	}
 	
 	bool is_valid() const noexcept {

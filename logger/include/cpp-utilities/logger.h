@@ -53,7 +53,7 @@ enum Level {
 
 namespace detail {
 
-static const int buffer_size = 1024;
+static const int BufferSize = 1024;
 
 //------------------------------------------------------------------------------
 // Name: get_minimum_from_env
@@ -343,7 +343,7 @@ inline detail::log_ref emergency() {
 // Name: message
 //------------------------------------------------------------------------------
 inline void message(Level level, const char *fmt, ...) noexcept {
-	char buf[detail::buffer_size];
+	char buf[detail::BufferSize];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -355,7 +355,7 @@ inline void message(Level level, const char *fmt, ...) noexcept {
 // Name: debug
 //------------------------------------------------------------------------------
 inline void debug(const char *fmt, ...) noexcept {
-	char buf[detail::buffer_size];
+	char buf[detail::BufferSize];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -367,7 +367,7 @@ inline void debug(const char *fmt, ...) noexcept {
 // Name: info
 //------------------------------------------------------------------------------
 inline void info(const char *fmt, ...) noexcept {
-	char buf[detail::buffer_size];
+	char buf[detail::BufferSize];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -379,7 +379,7 @@ inline void info(const char *fmt, ...) noexcept {
 // Name: notice
 //------------------------------------------------------------------------------
 inline void notice(const char *fmt, ...) noexcept {
-	char buf[detail::buffer_size];
+	char buf[detail::BufferSize];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -391,7 +391,7 @@ inline void notice(const char *fmt, ...) noexcept {
 // Name: warning
 //------------------------------------------------------------------------------
 inline void warning(const char *fmt, ...) noexcept {
-	char buf[detail::buffer_size];
+	char buf[detail::BufferSize];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -403,7 +403,7 @@ inline void warning(const char *fmt, ...) noexcept {
 // Name: error
 //------------------------------------------------------------------------------
 inline void error(const char *fmt, ...) noexcept {
-	char buf[detail::buffer_size];
+	char buf[detail::BufferSize];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -415,7 +415,7 @@ inline void error(const char *fmt, ...) noexcept {
 // Name: critical
 //------------------------------------------------------------------------------
 inline void critical(const char *fmt, ...) noexcept {
-	char buf[detail::buffer_size];
+	char buf[detail::BufferSize];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -427,7 +427,7 @@ inline void critical(const char *fmt, ...) noexcept {
 // Name: alert
 //------------------------------------------------------------------------------
 inline void alert(const char *fmt, ...) noexcept {
-	char buf[detail::buffer_size];
+	char buf[detail::BufferSize];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -439,7 +439,7 @@ inline void alert(const char *fmt, ...) noexcept {
 // Name: emergency
 //------------------------------------------------------------------------------
 inline void emergency(const char *fmt, ...) noexcept {
-	char buf[detail::buffer_size];
+	char buf[detail::BufferSize];
 	va_list ap;
 	va_start(ap, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, ap);

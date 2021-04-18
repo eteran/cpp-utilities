@@ -22,23 +22,28 @@
  * SOFTWARE.
  */
 
-#include <cpp-utilities/UUID.h>
+#include <cpp-utilities/uuid.h>
 #include <string>
 
 int main() {
 
-	auto ns   = UUID::from_string("{6ba7b810-9dad-11d1-80b4-00c04fd430c8}");
-	auto uuid = UUID::v4();
+	auto ns   = uuid::from_string("{6ba7b810-9dad-11d1-80b4-00c04fd430c8}");
+	auto v3 = uuid::v3(ns, "test");
+		
+	assert(v3.to_string() == "45a113ac-c7f2-30b0-90a5-a399ab912716");
 	
-	assert(!uuid.is_null());
-	assert(uuid.is_valid());
-	assert(uuid.version() == 4);
+	auto v5 = uuid::v5(ns, "test");
+	assert(v5.to_string() == "4be0643f-1d98-573b-97cd-ca98a65347dd");
+
+	auto uuid1 = uuid::v4();
 	
-	assert(UUID::is_valid(uuid.to_string()));
+	assert(!uuid1.is_null());
+	assert(uuid1.is_valid());
+	assert(uuid1.version() == 4);
 	
-	UUID uuid2;
+	assert(uuid::is_valid(uuid1.to_string()));
+	
+	uuid uuid2;
 	assert(uuid2.is_null());
 	assert(!uuid2.is_valid());
-
-
 }

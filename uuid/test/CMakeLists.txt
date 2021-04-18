@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 add_executable(cpp-utilities-uuid-test
-	UUID.cpp
+	uuid.cpp
 )
 
 target_link_libraries(cpp-utilities-uuid-test
