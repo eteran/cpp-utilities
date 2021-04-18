@@ -275,7 +275,7 @@ public:
 	static constexpr base_type fractional_mask = ~(static_cast<unsigned_type>(~base_type(0)) << fractional_bits);	
 	static constexpr base_type integer_mask    = ~fractional_mask;
 #ifdef __GNUC__
-#pragma GCC diagnostic push
+#pragma GCC diagnostic pop
 #endif
 
 public:
