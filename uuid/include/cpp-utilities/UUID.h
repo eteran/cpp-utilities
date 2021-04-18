@@ -29,8 +29,8 @@
 #include <random>
 #include <cassert>
 #include <algorithm>
-#include <cpp-utilities/MD5.h>
-#include <cpp-utilities/SHA1.h>
+#include <cpp-utilities/md5.h>
+#include <cpp-utilities/sha1.h>
 
 class UUID {
 public:
@@ -84,7 +84,7 @@ public:
 			bin.push_back(static_cast<uint8_t>(ch));
 		}
 
-		auto digest = hash::MD5(bin.begin(), bin.end()).finalize();
+		auto digest = hash::md5(bin.begin(), bin.end()).finalize();
 		auto bytes = digest.bytes();
 
 		for(size_t i = 0; i < 16; ++i) {
@@ -129,7 +129,7 @@ public:
 
 		// To determine the version 5 UUID of a given name, the UUID of the namespace (e.g., 6ba7b810-9dad-11d1-80b4-00c04fd430c8 for a domain)
 		// is transformed to a string of bytes corresponding to its hexadecimal digits, concatenated with the input name, hashed with
-		// SHA1 yielding 160 bits. Six bits are replaced by fixed values, four of these bits indicate the version, 0011 for version 5. Finally,
+		// sha1 yielding 160 bits. Six bits are replaced by fixed values, four of these bits indicate the version, 0011 for version 5. Finally,
 		// the first 128 bits of the fixed hash is transformed back into the hexadecimal form with hyphens separating the parts relevant in other UUID versions.
 
 		UUID r;
@@ -145,7 +145,7 @@ public:
 			bin.push_back(static_cast<uint8_t>(ch));
 		}
 
-		auto digest = hash::SHA1(bin.begin(), bin.end()).finalize();
+		auto digest = hash::sha1(bin.begin(), bin.end()).finalize();
 		auto bytes = digest.bytes();
 
 		for(size_t i = 0; i < 16; ++i) {
