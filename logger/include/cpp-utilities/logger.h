@@ -271,6 +271,9 @@ inline void message(Level level, std::string_view msg, const detail::sl &locatio
 
 		ss << msg;
 
+		// we render the whole message into the buffer above
+		// so that the lock is held for the shortest amount of
+		// time possible
 		std::unique_lock<std::mutex> lock(log_mutex);
 		std::clog << ss.str() << std::endl;
 	}
