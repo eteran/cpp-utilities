@@ -67,16 +67,14 @@ using sl = std::experimental::source_location;
 #endif
 
 //------------------------------------------------------------------------------
-// Name: parse_bool_string
+// Name: parse_bool_or_default
 //------------------------------------------------------------------------------
-inline bool parse_bool_string(const char *str) {
-	if (strcmp(str, "1") == 0) {
-		return true;
-	} else if (strcmp(str, "TRUE") == 0) {
-		return true;
-	} else {
-		return false;
+inline bool parse_bool_or_default(const char *str, bool default_value) {
+	if (!str) {
+		return default_value;
 	}
+
+	return strcmp(str, "1") == 0 || strcmp(str, "Y") == 0 || strcmp(str, "TRUE") == 0;
 }
 
 //------------------------------------------------------------------------------
@@ -137,11 +135,7 @@ inline Level minimum_level() {
 //------------------------------------------------------------------------------
 inline bool colorize() {
 	static const bool c = [] {
-		if (const char *const e = getenv("LOG_COLOR")) {
-			return parse_bool_string(e);
-		}
-
-		return true;
+		return parse_bool_or_default(getenv("LOG_COLOR"), true);
 	}();
 
 	return c;
@@ -152,11 +146,7 @@ inline bool colorize() {
 //------------------------------------------------------------------------------
 inline bool timedate() {
 	static const bool t = [] {
-		if (const char *const e = getenv("LOG_TIME")) {
-			return parse_bool_string(e);
-		}
-
-		return true;
+		return parse_bool_or_default(getenv("LOG_TIME"), true);
 	}();
 
 	return t;
@@ -167,11 +157,7 @@ inline bool timedate() {
 //------------------------------------------------------------------------------
 inline bool fullpath() {
 	static const bool t = [] {
-		if (const char *const e = getenv("LOG_FULLPATH")) {
-			return parse_bool_string(e);
-		}
-
-		return false;
+		return parse_bool_or_default(getenv("LOG_FULLPATH"), false);
 	}();
 
 	return t;
@@ -189,9 +175,9 @@ inline std::string_view basename(std::string_view path) {
 	std::string_view::size_type n = path.rfind('/');
 	if (n == std::string_view::npos) {
 		return path;
-	} else {
-		return path.substr(n + 1);
 	}
+
+	return path.substr(n + 1);
 }
 
 }
@@ -294,56 +280,56 @@ inline void message(Level level, std::string_view msg, const detail::sl &locatio
 // Name: debug
 //------------------------------------------------------------------------------
 inline void debug(std::string_view msg, const detail::sl &location = detail::sl::current()) {
-	return message(Debug, msg, location);
+	message(Debug, msg, location);
 }
 
 //------------------------------------------------------------------------------
 // Name: info
 //------------------------------------------------------------------------------
 inline void info(std::string_view msg, const detail::sl &location = detail::sl::current()) {
-	return message(Info, msg, location);
+	message(Info, msg, location);
 }
 
 //------------------------------------------------------------------------------
 // Name: notice
 //------------------------------------------------------------------------------
 inline void notice(std::string_view msg, const detail::sl &location = detail::sl::current()) {
-	return message(Notice, msg, location);
+	message(Notice, msg, location);
 }
 
 //------------------------------------------------------------------------------
 // Name: warning
 //------------------------------------------------------------------------------
 inline void warning(std::string_view msg, const detail::sl &location = detail::sl::current()) {
-	return message(Warn, msg, location);
+	message(Warn, msg, location);
 }
 
 //------------------------------------------------------------------------------
 // Name: error
 //------------------------------------------------------------------------------
 inline void error(std::string_view msg, const detail::sl &location = detail::sl::current()) {
-	return message(Error, msg, location);
+	message(Error, msg, location);
 }
 
 //------------------------------------------------------------------------------
 // Name: critical
 //------------------------------------------------------------------------------
 inline void critical(std::string_view msg, const detail::sl &location = detail::sl::current()) {
-	return message(Crit, msg, location);
+	message(Crit, msg, location);
 }
 
 //------------------------------------------------------------------------------
 // Name: alert
 //------------------------------------------------------------------------------
 inline void alert(std::string_view msg, const detail::sl &location = detail::sl::current()) {
-	return message(Alert, msg, location);
+	message(Alert, msg, location);
 }
 
 //------------------------------------------------------------------------------
 // Name: emergency
 //------------------------------------------------------------------------------
 inline void emergency(std::string_view msg, const detail::sl &location = detail::sl::current()) {
-	return message(Emerg, msg, location);
+	message(Emerg, msg, location);
 }
 
 // A class which will easily handle redirecting std::clog to the
