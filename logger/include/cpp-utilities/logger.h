@@ -197,7 +197,7 @@ inline void message(Level level, std::string_view msg, const detail::sl &locatio
 			auto now       = std::chrono::system_clock::now();
 			auto in_time_t = std::chrono::system_clock::to_time_t(now);
 
-			ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%dT%H:%M:%SZ") << ' ';
+			ss << std::put_time(std::gmtime(&in_time_t), "%Y-%m-%dT%H:%M:%SZ") << ' ';
 		}
 
 		ss << '[' << detail::basename(location.file_name()) << ':' << location.line() << "] ";
