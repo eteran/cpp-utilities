@@ -13,5 +13,11 @@ int main() {
 	});
 	
 	std::cerr << "printf(\"Hello World\\n\") x 10, Took: " << time1.count() << " \xC2\xB5s to execute." << std::endl;
+	
+	auto time2 = time_code_once<ms>([]() {
+		printf("Hello World\n");
+	});
+	
+	std::cerr << "printf(\"Hello World\\n\") once, Took: " << time2.count() << " \xC2\xB5s to execute." << std::endl;
 
 }
