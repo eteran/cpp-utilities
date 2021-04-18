@@ -67,56 +67,6 @@ using sl = std::experimental::source_location;
 #endif
 
 //------------------------------------------------------------------------------
-// Name: get_minimum_from_env
-//------------------------------------------------------------------------------
-inline Level get_minimum_from_env() {
-
-	if (const char *const e = getenv("LOG_LEVEL")) {
-
-		if (e[0] != '\0' && e[1] == '\0') {
-			switch (e[0]) {
-			case '7':
-				return Debug;
-			case '6':
-				return Info;
-			case '5':
-				return Notice;
-			case '4':
-				return Warn;
-			case '3':
-				return Error;
-			case '2':
-				return Crit;
-			case '1':
-				return Alert;
-			case '0':
-				return Emerg;
-			}
-		}
-
-		if (strcmp(e, "DEBUG") == 0) {
-			return Debug;
-		} else if (strcmp(e, "INFO") == 0) {
-			return Info;
-		} else if (strcmp(e, "NOTICE") == 0) {
-			return Notice;
-		} else if (strcmp(e, "WARN") == 0) {
-			return Warn;
-		} else if (strcmp(e, "ERROR") == 0) {
-			return Error;
-		} else if (strcmp(e, "CRIT") == 0) {
-			return Crit;
-		} else if (strcmp(e, "ALERT") == 0) {
-			return Alert;
-		} else if (strcmp(e, "EMERG") == 0) {
-			return Emerg;
-		}
-	}
-
-	return Notice;
-}
-
-//------------------------------------------------------------------------------
 // Name: parse_bool_string
 //------------------------------------------------------------------------------
 inline bool parse_bool_string(const char *str) {
@@ -130,46 +80,55 @@ inline bool parse_bool_string(const char *str) {
 }
 
 //------------------------------------------------------------------------------
-// Name: get_colorize_from_env
-//------------------------------------------------------------------------------
-inline bool get_colorize_from_env() {
-
-	if (const char *const e = getenv("LOG_COLOR")) {
-		return parse_bool_string(e);
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------------
-// Name: get_timedate_from_env()
-//------------------------------------------------------------------------------
-inline bool get_timedate_from_env() {
-
-	if (const char *const e = getenv("LOG_TIME")) {
-		return parse_bool_string(e);
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------------
-// Name: get_fullpath_from_env()
-//------------------------------------------------------------------------------
-inline bool get_fullpath_from_env() {
-
-	if (const char *const e = getenv("LOG_FULLPATH")) {
-		return parse_bool_string(e);
-	}
-
-	return false;
-}
-
-//------------------------------------------------------------------------------
 // Name: minimum_level
 //------------------------------------------------------------------------------
 inline Level minimum_level() {
-	static const Level level = get_minimum_from_env();
+	static const Level level = [] {
+		if (const char *const e = getenv("LOG_LEVEL")) {
+
+			if (e[0] != '\0' && e[1] == '\0') {
+				switch (e[0]) {
+				case '7':
+					return Debug;
+				case '6':
+					return Info;
+				case '5':
+					return Notice;
+				case '4':
+					return Warn;
+				case '3':
+					return Error;
+				case '2':
+					return Crit;
+				case '1':
+					return Alert;
+				case '0':
+					return Emerg;
+				}
+			}
+
+			if (strcmp(e, "DEBUG") == 0) {
+				return Debug;
+			} else if (strcmp(e, "INFO") == 0) {
+				return Info;
+			} else if (strcmp(e, "NOTICE") == 0) {
+				return Notice;
+			} else if (strcmp(e, "WARN") == 0) {
+				return Warn;
+			} else if (strcmp(e, "ERROR") == 0) {
+				return Error;
+			} else if (strcmp(e, "CRIT") == 0) {
+				return Crit;
+			} else if (strcmp(e, "ALERT") == 0) {
+				return Alert;
+			} else if (strcmp(e, "EMERG") == 0) {
+				return Emerg;
+			}
+		}
+
+		return Notice;
+	}();
+
 	return level;
 }
 
@@ -177,7 +136,14 @@ inline Level minimum_level() {
 // Name: colorize
 //------------------------------------------------------------------------------
 inline bool colorize() {
-	static const bool c = get_colorize_from_env();
+	static const bool c = [] {
+		if (const char *const e = getenv("LOG_COLOR")) {
+			return parse_bool_string(e);
+		}
+
+		return true;
+	}();
+
 	return c;
 }
 
@@ -185,7 +151,14 @@ inline bool colorize() {
 // Name: timedate
 //------------------------------------------------------------------------------
 inline bool timedate() {
-	static const bool t = get_timedate_from_env();
+	static const bool t = [] {
+		if (const char *const e = getenv("LOG_TIME")) {
+			return parse_bool_string(e);
+		}
+
+		return true;
+	}();
+
 	return t;
 }
 
@@ -193,7 +166,14 @@ inline bool timedate() {
 // Name: timedate
 //------------------------------------------------------------------------------
 inline bool fullpath() {
-	static const bool t = get_fullpath_from_env();
+	static const bool t = [] {
+		if (const char *const e = getenv("LOG_FULLPATH")) {
+			return parse_bool_string(e);
+		}
+
+		return false;
+	}();
+
 	return t;
 }
 
