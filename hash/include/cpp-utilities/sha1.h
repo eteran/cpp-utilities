@@ -50,11 +50,6 @@ public:
 		friend class sha1;
 
 	public:
-		digest() {
-
-		}
-
-	public:
 		std::string to_string() const {
 			static const char hexchars[] = "0123456789abcdef";
 			std::string str;
