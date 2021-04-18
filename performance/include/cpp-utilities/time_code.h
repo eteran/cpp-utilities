@@ -7,7 +7,6 @@
 template <class R, int Count, class F>
 R time_code(F func) {
 
-	// test the timing of our printf
 	auto then = std::chrono::system_clock::now();
 
 	for (int i = 0; i < Count; ++i) {
