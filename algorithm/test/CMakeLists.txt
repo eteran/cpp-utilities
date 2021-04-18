@@ -10,6 +10,8 @@ PRIVATE
 	cpp-utilities::algorithm
 )
 
+set_property(TARGET cpp-utilities-algorithm-test PROPERTY CXX_STANDARD 17)
+
 add_test(
 	NAME cpp-utilities-algorithm-test
 	COMMAND $<TARGET_FILE:cpp-utilities-algorithm-test>
