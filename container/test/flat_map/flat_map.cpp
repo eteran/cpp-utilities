@@ -1,11 +1,11 @@
-#include <cpp-utilities/FlatMap.h>
+#include <cpp-utilities/flat_map.h>
 #include <string>
 #include <iostream>
 
-template class FlatMap<int, std::string>;
+template class flat_map<int, std::string>;
 
 int main() {
-	FlatMap<int, std::string> map = {
+	flat_map<int, std::string> map = {
 		std::make_pair(1, "one"),
         std::make_pair(2, "two"),
     };

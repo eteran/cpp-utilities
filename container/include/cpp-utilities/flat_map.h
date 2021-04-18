@@ -1,5 +1,5 @@
-#ifndef FLAT_SET_H_
-#define FLAT_SET_H_
+#ifndef FLAT_MAP_H_
+#define FLAT_MAP_H_
 
 #include <algorithm>
 #include <cstddef>
@@ -9,11 +9,13 @@
 #include <utility>
 #include <vector>
 
-template <class Key, class Compare = std::less<Key>, class Allocator = std::allocator<Key>>
-class FlatSet {
+template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T>>>
+class flat_map {
 public:
 	using key_type               = Key;
-	using value_type             = Key;
+	using mapped_type            = T;
+//	using value_type             = std::pair<const Key, T>;
+	using value_type             = std::pair<Key, T>;
 	using storage_type           = std::vector<value_type, Allocator>;
 	using size_type              = typename storage_type::size_type;
 	using difference_type        = typename storage_type::difference_type;
@@ -30,7 +32,7 @@ public:
 
 public:
 	class value_compare {
-		friend class FlatSet;
+		friend class flat_map;
 
 	protected:
 		value_compare(Compare c) : comp(c) {
@@ -38,6 +40,20 @@ public:
 
 	public:
 		bool operator()(const value_type &lhs, const value_type &rhs) const {
+			return comp(lhs.first, rhs.first);
+		}
+
+	public:
+		// for convinience
+		bool operator()(const key_type &lhs, const value_type &rhs) const {
+			return comp(lhs, rhs.first);
+		}
+
+		bool operator()(const value_type &lhs, const key_type &rhs) const {
+			return comp(lhs.first, rhs);
+		}
+
+		bool operator()(const key_type &lhs, const key_type &rhs) const {
 			return comp(lhs, rhs);
 		}
 
@@ -46,67 +62,125 @@ public:
 	};
 
 public:
-	FlatSet() : FlatSet(Compare()) {
+	flat_map() : flat_map(Compare()) {
 	}
 
-	explicit FlatSet(const Compare &comp, const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
+	explicit flat_map(const Compare &comp, const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
 	}
 
 	template <class In>
-	FlatSet(In first, In last, const Compare &comp = Compare(), const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
+	flat_map(In first, In last, const Compare &comp = Compare(), const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
 		insert(first, last);
 	}
 
 	template <class In>
-	FlatSet(In first, In last, const Allocator &alloc) : storage_(alloc) {
+	flat_map(In first, In last, const Allocator &alloc) : storage_(alloc) {
 		insert(first, last);
 	}
 
-	FlatSet(const FlatSet &other) : comp_(other.comp_), storage_(other.storage_) {
+	flat_map(const flat_map &other) : comp_(other.comp_), storage_(other.storage_) {
 	}
 
-	FlatSet(const FlatSet &other, const Allocator &alloc) : comp_(other.comp_), storage_(other.storage_, alloc) {
+	flat_map(const flat_map &other, const Allocator &alloc) : comp_(other.comp_), storage_(other.storage_, alloc) {
 	}
 
-	FlatSet(const FlatSet &&other) : comp_(std::move(other.comp_)), storage_(std::move(other.storage_)) {
+	flat_map(const flat_map &&other) : comp_(std::move(other.comp_)), storage_(std::move(other.storage_)) {
 	}
 
-	FlatSet(const FlatSet &&other, const Allocator &alloc) : comp_(std::move(other.comp_)), storage_(std::move(other.storage_), alloc) {
+	flat_map(const flat_map &&other, const Allocator &alloc) : comp_(std::move(other.comp_)), storage_(std::move(other.storage_), alloc) {
 	}
 
-	FlatSet(std::initializer_list<value_type> init, const Compare &comp = Compare(), const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
+	flat_map(std::initializer_list<value_type> init, const Compare &comp = Compare(), const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
 		insert(init);
 	}
 
-	FlatSet(std::initializer_list<value_type> init, const Allocator &alloc) : comp_(Compare()), storage_(alloc) {
+	flat_map(std::initializer_list<value_type> init, const Allocator &alloc) : comp_(Compare()), storage_(alloc) {
 		insert(init);
 	}
 
-	~FlatSet() = default;
+	~flat_map() = default;
 
 public:
-	FlatSet &operator=(const FlatSet &other) {
+	flat_map &operator=(const flat_map &other) {
 		if(this != &other) {
-			FlatSet(other).swap(*this);
+			flat_map(other).swap(*this);
 		}
 		return *this;
 	}
 
-	FlatSet &operator=(FlatSet &&other) {
+	flat_map &operator=(flat_map &&other) {
 		if(this != &other) {
-			FlatSet(std::move(other)).swap(*this);
+			flat_map(std::move(other)).swap(*this);
 		}
 		return *this;
 	}
 
-	FlatSet &operator=(std::initializer_list<value_type> ilist) {
-		FlatSet(ilist).swap(*this);
+	flat_map &operator=(std::initializer_list<value_type> ilist) {
+		flat_map(ilist).swap(*this);
 		return *this;
 	}
 
 public:
 	allocator_type get_allocator() const {
 		return storage_.get_allocator();
+	}
+
+public:
+	T &at(const Key &key) {
+		using std::begin;
+		using std::end;
+
+		auto it = std::lower_bound(begin(storage_), end(storage_), key, comp_);
+		if (it != end(storage_) && !comp_(key, *it)) {
+			// found!
+			return it->second;
+		} else {
+			throw std::out_of_range("out_of_range");
+		}
+	}
+
+	const T &at(const Key &key) const {
+		using std::begin;
+		using std::end;
+
+		auto it = std::lower_bound(begin(storage_), end(storage_), key, comp_);
+		if (it != end(storage_) && !comp_(key, *it)) {
+			// found!
+			return it->second;
+		} else {
+			throw std::out_of_range("out_of_range");
+		}
+	}
+
+public:
+	T &operator[](const Key &key) {
+		using std::begin;
+		using std::end;
+
+		auto it = std::lower_bound(begin(storage_), end(storage_), key, comp_);
+		if (it != end(storage_) && !comp_(key, *it)) {
+			// found!
+			return it->second;
+		} else {
+			// create it
+			auto n = storage_.emplace(it, key, T());
+			return n->second;
+		}
+	}
+
+	T &operator[](Key &&key) {
+		using std::begin;
+		using std::end;
+
+		auto it = std::lower_bound(begin(storage_), end(storage_), key, comp_);
+		if (it != end(storage_) && !comp_(key, *it)) {
+			// found!
+			return it->second;
+		} else {
+			// create it
+			auto n = storage_.emplace(it, std::forward<Key>(key), T());
+			return n->second;
+		}
 	}
 
 public:
@@ -365,7 +439,7 @@ public:
 	}
 
 public:
-	void swap(FlatSet &other) {
+	void swap(flat_map &other) {
 		using std::swap;
 		swap(comp_, other.comp_);
 		swap(storage_, other.storage_);

@@ -1,12 +1,12 @@
-#include <cpp-utilities/FlatSet.h>
+#include <cpp-utilities/flat_set.h>
 #include <string>
 #include <iostream>
 
-template class FlatSet<int>;
+template class flat_set<int>;
 
 int main() {
 
-	FlatSet<int> set = {
+	flat_set<int> set = {
 		10, 2, 50
     };
 

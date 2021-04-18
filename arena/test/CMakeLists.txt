@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 add_executable(cpp-utilities-arena-test
-	Arena.cpp
+	arena.cpp
 )
 
 target_link_libraries(cpp-utilities-arena-test
