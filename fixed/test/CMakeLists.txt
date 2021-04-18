@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 add_executable(cpp-utilities-fixed-test
-	Fixed.cpp
+	fixed.cpp
 )
 target_link_libraries(cpp-utilities-fixed-test
 PRIVATE
