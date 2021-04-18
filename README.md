@@ -2,13 +2,13 @@
 Miscellaneous C++11/C++14/C++17 utility classes and functions
 
 ### Hash Library
-Found in [MD5.h](hash/include/cpp-utilities/MD5.h), [MD5.cpp](hash/src/MD5.cpp), [SHA1.h](hash/include/cpp-utilities/SHA1.h) and [SHA1.cpp](hash/src/SHA1.cpp).
+Found in [md5.h](hash/include/cpp-utilities/md5.h) and [sha1.h](hash/include/cpp-utilities/SHA1.h)
 
 As you might expect, this is an implementation of the MD5 and SHA1 hashing algorithms. The usage of both are identical and designed for ease of use.
 
     // create an MD5 object and give it some data
-    hash::MD5 hasher("Hello World");
-    hasher.append('!'); // you can stream new values in as you please
+    hash::md5 hasher("Hello World");
+    hasher.update('!'); // you can stream new values in as you please
     auto digest = hasher.finalize();  // create a digest for "Hello World!"
     std::cout << digest.to_string() << std::endl;
 
@@ -119,21 +119,21 @@ Will print:
 
 
 ### Fixed Point Math
-[Fixed.h](fixed/include/cpp-utilities/Fixed.h)
+[fixed.h](fixed/include/cpp-utilities/fixed.h)
 
 This is a Fixed Point math class. It supports all combinations which add up to a native data types (8.8/16.16/24.8/etc). The template parameters are the number of bits to use as the base type for both the integer and fractional portions, invalid combinations will yield a compiler error; the current implementation makes use of `static assert` to make this more readable. It should be a nice drop in replacement for native `float` types. Here's an example usage:
 
-	typedef numeric::Fixed<16, 16> fixed;
+	typedef numeric::fixed<16, 16> fixed;
 	fixed f;
 	
 This will declare a 16.16 fixed point number. Operators are provided though the use of boost::operators. multiplication and division are implemented in free functions named `numeric::multiply` and `numeric::divide` which use `std::enable_if` to choose the best option. If a larger type is available, it will use the accurate and fast scaled math version. If there is not a larger type available, then it will fall back on the slower multiply and emulated divide (which unfortunately has less precision). This system allows the user to specialize the multiplication and division as needed.	
 
 
 ### Flat associative containers
-[FlatMap.h](container/include/cpp-utilities/FlatMap.h)
+[flat_map.h](container/include/cpp-utilities/flat_map.h)
 
 This is an implementation of a `std::map` but using a contiguous data structure (`std::vector`) as the underlying storage. The elements are stored sorted by key, so lookup should be as efficient as a `binary_search`, and iteration is as efficient as accessing a `std::vector`.
 
-[FlatSet.h](container/include/cpp-utilities/FlatSet.h)
+[flat_set.h](container/include/cpp-utilities/flat_set.h)
 
 This is an implementation of a `std::set` but using a contiguous data structure (`std::vector`) as the underlying storage. The elements are stored sorted by key, so lookup should be as efficient as a `binary_search`, and iteration is as efficient as accessing a `std::vector`.
