@@ -444,7 +444,7 @@ public: // conversion to basic types
 	}
 
 	constexpr unsigned int to_uint() const {
-		return (data_ & integer_mask) >> fractional_bits;
+		return static_cast<unsigned int>(data_ & integer_mask) >> fractional_bits;
 	}
 
 	constexpr float to_float() const {

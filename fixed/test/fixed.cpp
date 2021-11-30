@@ -59,4 +59,7 @@ int main() {
 	static_assert(0 !=   fixed{1}, "");
 	static_assert(1 >=   fixed{0}, "");
 	static_assert(0.5 <= fixed{1}, "");
+
+	// conversion test
+	assert(fixed(0x8000).to_uint() == 0x8000);
 }
