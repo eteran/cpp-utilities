@@ -53,6 +53,9 @@ namespace detail {
 // from a type which is nice for the division op
 template <size_t T>
 struct type_from_size {
+	using value_type    = void;
+	using unsigned_type = void;
+	using signed_type   = void;
 	static constexpr bool is_specialized = false;
 };
 
