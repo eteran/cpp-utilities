@@ -53,6 +53,9 @@ namespace detail {
 // from a type which is nice for the division op
 template <size_t T>
 struct type_from_size {
+	using value_type    = void;
+	using unsigned_type = void;
+	using signed_type   = void;
 	static constexpr bool is_specialized = false;
 };
 
@@ -239,15 +242,15 @@ CONSTEXPR14 fixed<I,F> multiply(fixed<I, F> lhs, fixed<I, F> rhs, typename std::
 	constexpr base_type fractional_mask = fixed<I,F>::fractional_mask;
 
 	// more costly but doesn't need a larger type
-	constexpr base_type a_hi = (lhs.to_raw() & integer_mask) >> fractional_bits;
-	constexpr base_type b_hi = (rhs.to_raw() & integer_mask) >> fractional_bits;
-	constexpr base_type a_lo = (lhs.to_raw() & fractional_mask);
-	constexpr base_type b_lo = (rhs.to_raw() & fractional_mask);
+	const base_type a_hi = (lhs.to_raw() & integer_mask) >> fractional_bits;
+	const base_type b_hi = (rhs.to_raw() & integer_mask) >> fractional_bits;
+	const base_type a_lo = (lhs.to_raw() & fractional_mask);
+	const base_type b_lo = (rhs.to_raw() & fractional_mask);
 
-	constexpr base_type x1 = a_hi * b_hi;
-	constexpr base_type x2 = a_hi * b_lo;
-	constexpr base_type x3 = a_lo * b_hi;
-	constexpr base_type x4 = a_lo * b_lo;
+	const base_type x1 = a_hi * b_hi;
+	const base_type x2 = a_hi * b_lo;
+	const base_type x3 = a_lo * b_hi;
+	const base_type x4 = a_lo * b_lo;
 
 	return fixed<I,F>::from_base((x1 << fractional_bits) + (x3 + x2) + (x4 >> fractional_bits));
 }
