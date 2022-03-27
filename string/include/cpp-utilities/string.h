@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Evan Teran
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
+
 #ifndef UTILITIES_STRING_HPP_
 #define UTILITIES_STRING_HPP_
 
@@ -39,7 +39,7 @@ namespace string {
 //------------------------------------------------------------------------------
 // Name: safe_ctype
 //------------------------------------------------------------------------------
-template<int (&F)(int)>
+template <int (&F)(int)>
 int safe_ctype(unsigned char c) {
 	return F(c);
 }
@@ -77,8 +77,9 @@ inline bool starts_with(const std::string &s, const std::string &prefix) {
 //------------------------------------------------------------------------------
 inline void rtrim(std::string &s) {
 	s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
-		 return !safe_ctype<std::isspace>(ch);
-	 }).base(), s.end());
+				return !safe_ctype<std::isspace>(ch);
+			}).base(),
+			s.end());
 }
 
 //------------------------------------------------------------------------------
@@ -86,8 +87,8 @@ inline void rtrim(std::string &s) {
 //------------------------------------------------------------------------------
 inline void ltrim(std::string &s) {
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
-		return !safe_ctype<std::isspace>(ch);
-	}));
+				return !safe_ctype<std::isspace>(ch);
+			}));
 }
 
 //------------------------------------------------------------------------------
@@ -162,9 +163,9 @@ inline std::string tolower_copy(std::string s) {
 //------------------------------------------------------------------------------
 inline std::string implode(char glue, const std::vector<std::string> &pieces) {
 	std::string s;
-	if(!pieces.empty()) {
+	if (!pieces.empty()) {
 		s.append(pieces[0]);
-		for(size_t i = 1; i < pieces.size(); ++i) {
+		for (size_t i = 1; i < pieces.size(); ++i) {
 			s.push_back(glue);
 			s.append(pieces[i]);
 		}
@@ -178,9 +179,9 @@ inline std::string implode(char glue, const std::vector<std::string> &pieces) {
 //------------------------------------------------------------------------------
 inline std::string implode(const std::string &glue, const std::vector<std::string> &pieces) {
 	std::string s;
-	if(!pieces.empty()) {
+	if (!pieces.empty()) {
 		s.append(pieces[0]);
-		for(size_t i = 1; i < pieces.size(); ++i) {
+		for (size_t i = 1; i < pieces.size(); ++i) {
 			s.append(glue);
 			s.append(pieces[i]);
 		}
@@ -194,18 +195,18 @@ inline std::string implode(const std::string &glue, const std::vector<std::strin
 inline std::vector<std::string> explode(const std::string &delimeter, const std::string &string, int limit) {
 	std::vector<std::string> r;
 
-	if(!string.empty()) {
-		if(limit >= 0) {
-			if(limit == 0) {
+	if (!string.empty()) {
+		if (limit >= 0) {
+			if (limit == 0) {
 				limit = 1;
 			}
 
 			size_t first = 0;
 			size_t last  = string.find(delimeter);
 
-			while(last != std::string::npos) {
+			while (last != std::string::npos) {
 
-				if(--limit == 0) {
+				if (--limit == 0) {
 					break;
 				}
 
@@ -219,21 +220,21 @@ inline std::vector<std::string> explode(const std::string &delimeter, const std:
 			size_t first = 0;
 			size_t last  = string.find(delimeter);
 
-			while(last != std::string::npos) {
+			while (last != std::string::npos) {
 				r.emplace_back(string.substr(first, last - first));
 				first = last + delimeter.size();
 				last  = string.find(delimeter, last + delimeter.size());
 			}
 
 			r.emplace_back(string.substr(first));
-			
-			while(limit < 0) {
+
+			while (limit < 0) {
 				r.pop_back();
 				++limit;
 			}
 		}
 	}
-	
+
 	return r;
 }
 
@@ -250,18 +251,18 @@ inline std::vector<std::string> explode(const std::string &delimeter, const std:
 inline std::vector<std::string> explode(char delimeter, const std::string &string, int limit) {
 	std::vector<std::string> r;
 
-	if(!string.empty()) {
-		if(limit >= 0) {
-			if(limit == 0) {
+	if (!string.empty()) {
+		if (limit >= 0) {
+			if (limit == 0) {
 				limit = 1;
 			}
 
 			size_t first = 0;
 			size_t last  = string.find(delimeter);
 
-			while(last != std::string::npos) {
+			while (last != std::string::npos) {
 
-				if(--limit == 0) {
+				if (--limit == 0) {
 					break;
 				}
 
@@ -275,21 +276,21 @@ inline std::vector<std::string> explode(char delimeter, const std::string &strin
 			size_t first = 0;
 			size_t last  = string.find(delimeter);
 
-			while(last != std::string::npos) {
+			while (last != std::string::npos) {
 				r.emplace_back(string.substr(first, last - first));
 				first = last + 1;
 				last  = string.find(delimeter, last + 1);
 			}
 
 			r.emplace_back(string.substr(first));
-			
-			while(limit < 0) {
+
+			while (limit < 0) {
 				r.pop_back();
 				++limit;
 			}
 		}
 	}
-	
+
 	return r;
 }
 
@@ -306,7 +307,7 @@ inline std::vector<std::string> explode(char delimeter, const std::string &strin
 template <class Op>
 void split(const std::string &s, char delim, Op op) {
 	std::stringstream ss(s);
-	for(std::string item; std::getline(ss, item, delim); ) {
+	for (std::string item; std::getline(ss, item, delim);) {
 		*op++ = item;
 	}
 }
@@ -315,9 +316,9 @@ void split(const std::string &s, char delim, Op op) {
 // Name: split
 //------------------------------------------------------------------------------
 inline std::vector<std::string> split(const std::string &s, char delim) {
-    std::vector<std::string> elems;
-    split(s, delim, std::back_inserter(elems));
-    return elems;
+	std::vector<std::string> elems;
+	split(s, delim, std::back_inserter(elems));
+	return elems;
 }
 
 }

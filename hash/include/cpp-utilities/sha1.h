@@ -97,8 +97,7 @@ public:
 			0xefcdab89,
 			0x98badcfe,
 			0x10325476,
-			0xc3d2e1f0
-		};
+			0xc3d2e1f0};
 	};
 
 public:

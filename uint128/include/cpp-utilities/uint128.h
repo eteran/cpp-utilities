@@ -74,7 +74,7 @@ static void divide(const T &numerator, const T &denominator, T &quotient, T &rem
 // convinience macro
 #define U128_C(s) uint128(#s)
 
-class uint128 : public boost::shiftable<uint128, boost::totally_ordered<uint128, boost::integer_arithmetic<uint128, boost::bitwise<uint128, boost::unit_steppable<uint128 > > > > > {
+class uint128 : public boost::shiftable<uint128, boost::totally_ordered<uint128, boost::integer_arithmetic<uint128, boost::bitwise<uint128, boost::unit_steppable<uint128>>>>> {
 public:
 	typedef uint64_t base_type;
 
@@ -87,35 +87,43 @@ private:
 
 public:
 	// constructors for all basic types
-	uint128() : lo(0), hi(0) {
+	uint128()
+		: lo(0), hi(0) {
 	}
 
-	uint128(int value) : lo(static_cast<base_type>(value)), hi(0) {
+	uint128(int value)
+		: lo(static_cast<base_type>(value)), hi(0) {
 		if (value < 0)
 			hi = static_cast<base_type>(-1);
 	}
 
-	uint128(unsigned int value) : lo(static_cast<base_type>(value)), hi(0) {
+	uint128(unsigned int value)
+		: lo(static_cast<base_type>(value)), hi(0) {
 	}
 
-	uint128(float value) : lo(static_cast<base_type>(value)), hi(0) {
+	uint128(float value)
+		: lo(static_cast<base_type>(value)), hi(0) {
 	}
 
-	uint128(double value) : lo(static_cast<base_type>(value)), hi(0) {
+	uint128(double value)
+		: lo(static_cast<base_type>(value)), hi(0) {
 	}
 
-	uint128(const uint128 &value) : lo(value.lo), hi(value.hi) {
+	uint128(const uint128 &value)
+		: lo(value.lo), hi(value.hi) {
 	}
 
-	uint128(base_type value) : lo(value), hi(0) {
+	uint128(base_type value)
+		: lo(value), hi(0) {
 	}
 
-	uint128(const std::string &sz) : lo(0), hi(0) {
+	uint128(const std::string &sz)
+		: lo(0), hi(0) {
 
 		// do we have at least one character?
 		if (!sz.empty()) {
 			// make some reasonable assumptions
-			int  radix = 10;
+			int radix  = 10;
 			bool minus = false;
 
 			auto i = sz.begin();
@@ -142,7 +150,7 @@ public:
 
 				while (i != sz.end()) {
 					unsigned int n;
-					const char   ch = *i;
+					const char ch = *i;
 
 					if (ch >= 'A' && ch <= 'Z') {
 						if (((ch - 'A') + 10) < radix) {
@@ -399,7 +407,7 @@ public:
 		sz[sizeof(sz) - 1] = '\0';
 
 		uint128 ii(*this);
-		int     i = size - 1;
+		int i = size - 1;
 
 		while (ii != 0 && i) {
 

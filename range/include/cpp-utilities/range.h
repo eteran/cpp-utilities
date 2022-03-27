@@ -44,7 +44,8 @@ public:
 	using reference         = const Integer; // we lie so std::reverse_iterator<> doesn't return references to temporaries
 
 public:
-	explicit const_iterator(Integer value) : value_(value) {
+	explicit const_iterator(Integer value)
+		: value_(value) {
 	}
 
 	const_iterator(const const_iterator &) = default;
@@ -53,7 +54,7 @@ public:
 public:
 	bool operator!=(const const_iterator &rhs) const { return value_ != rhs.value_; }
 	bool operator==(const const_iterator &rhs) const { return value_ == rhs.value_; }
-	bool operator<(const const_iterator &rhs) const  { return value_ < rhs.value_;  }
+	bool operator<(const const_iterator &rhs) const { return value_ < rhs.value_; }
 
 public:
 	Integer operator*() const { return value_; }
@@ -97,27 +98,28 @@ public:
 	using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 public:
-	numeric_range(Integer first, Integer last) : first_(first), last_(last) {
+	numeric_range(Integer first, Integer last)
+		: first_(first), last_(last) {
 	}
 
 public:
-	const_iterator begin() const           { return const_iterator(first_);    }
-	const_iterator cbegin() const          { return const_iterator(first_);    }
-	const_iterator cend() const            { return const_iterator(last_);     }
-	const_iterator end() const             { return const_iterator(last_);     }
-	const_reverse_iterator crbegin() const { return rbegin();                  }
-	const_reverse_iterator crend() const   { return rend();                    }
-	const_reverse_iterator rbegin() const  { return rbegin();                  }
-	const_reverse_iterator rend() const    { return rend();                    }
-	iterator begin()                       { return iterator(first_);		   }
-	iterator end()	                       { return iterator(last_);		   }
-	reverse_iterator rbegin()              { return reverse_iterator(end());   }
-	reverse_iterator rend()	               { return reverse_iterator(begin()); }
+	const_iterator begin() const { return const_iterator(first_); }
+	const_iterator cbegin() const { return const_iterator(first_); }
+	const_iterator cend() const { return const_iterator(last_); }
+	const_iterator end() const { return const_iterator(last_); }
+	const_reverse_iterator crbegin() const { return rbegin(); }
+	const_reverse_iterator crend() const { return rend(); }
+	const_reverse_iterator rbegin() const { return rbegin(); }
+	const_reverse_iterator rend() const { return rend(); }
+	iterator begin() { return iterator(first_); }
+	iterator end() { return iterator(last_); }
+	reverse_iterator rbegin() { return reverse_iterator(end()); }
+	reverse_iterator rend() { return reverse_iterator(begin()); }
 
 public:
-	size_type size() const     { return std::distance(begin(), end()); }
+	size_type size() const { return std::distance(begin(), end()); }
 	size_type capacity() const { return size(); }
-	bool empty() const         { return size() == 0; }
+	bool empty() const { return size() == 0; }
 
 private:
 	Integer first_;
@@ -133,4 +135,3 @@ numeric_range<Integer> make_numeric_range(Integer first, Integer last) {
 }
 
 #endif
-

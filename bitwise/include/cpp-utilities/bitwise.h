@@ -25,7 +25,7 @@
 #ifndef UTILITIES_BITWISE_HPP_
 #define UTILITIES_BITWISE_HPP_
 
-#include <climits>	// for CHAR_BIT
+#include <climits> // for CHAR_BIT
 
 namespace bitwise {
 
@@ -39,7 +39,7 @@ namespace bitwise {
 template <class T>
 T rotate_left(T v, int n) noexcept {
 	constexpr unsigned int bits = CHAR_BIT * sizeof(T);
-	const T mask = ~(T(-1) << n);
+	const T mask                = ~(T(-1) << n);
 
 	return (v << n) | ((v >> (bits - n)) & mask);
 }

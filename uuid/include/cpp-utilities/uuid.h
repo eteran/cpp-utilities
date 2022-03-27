@@ -25,21 +25,20 @@
 #ifndef UUID_H_
 #define UUID_H_
 
-#include <string>
-#include <random>
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 #include <cpp-utilities/md5.h>
 #include <cpp-utilities/sha1.h>
+#include <random>
+#include <string>
 
 class uuid {
 public:
-	uuid() = default;
+	uuid()             = default;
 	uuid(const uuid &) = default;
-	uuid& operator=(const uuid &) = default;
+	uuid &operator=(const uuid &) = default;
 
 public:
-
 	static uuid from_string(std::string str) noexcept {
 
 		assert(is_valid(str));
@@ -54,15 +53,14 @@ public:
 
 		uuid r;
 
-		for(size_t i = 0; i < 16; ++i) {
-			const char ch[3] = { str[i * 2], str[i * 2 + 1], '\0' };
-			const auto v = static_cast<uint8_t>(strtoul(ch, nullptr, 16));
-			r.v_[i] = v;
+		for (size_t i = 0; i < 16; ++i) {
+			const char ch[3] = {str[i * 2], str[i * 2 + 1], '\0'};
+			const auto v     = static_cast<uint8_t>(strtoul(ch, nullptr, 16));
+			r.v_[i]          = v;
 		}
 
 		return r;
 	}
-
 
 	static uuid v3(const uuid &ns, const std::string &name) noexcept {
 
@@ -76,18 +74,18 @@ public:
 		std::vector<uint8_t> bin;
 		bin.reserve(16 + name.size());
 
-		for(size_t i = 0; i < 16; ++i) {
+		for (size_t i = 0; i < 16; ++i) {
 			bin.push_back(ns[i]);
 		}
 
-		for(char ch : name) {
+		for (char ch : name) {
 			bin.push_back(static_cast<uint8_t>(ch));
 		}
 
 		auto digest = hash::md5(bin.begin(), bin.end()).finalize();
-		auto bytes = digest.bytes();
+		auto bytes  = digest.bytes();
 
-		for(size_t i = 0; i < 16; ++i) {
+		for (size_t i = 0; i < 16; ++i) {
 			r.v_[i] = bytes[i];
 		}
 
@@ -137,18 +135,18 @@ public:
 		std::vector<uint8_t> bin;
 		bin.reserve(16 + name.size());
 
-		for(size_t i = 0; i < 16; ++i) {
+		for (size_t i = 0; i < 16; ++i) {
 			bin.push_back(ns[i]);
 		}
 
-		for(char ch : name) {
+		for (char ch : name) {
 			bin.push_back(static_cast<uint8_t>(ch));
 		}
 
 		auto digest = hash::sha1(bin.begin(), bin.end()).finalize();
-		auto bytes = digest.bytes();
+		auto bytes  = digest.bytes();
 
-		for(size_t i = 0; i < 16; ++i) {
+		for (size_t i = 0; i < 16; ++i) {
 			r.v_[i] = bytes[i];
 		}
 
@@ -161,38 +159,38 @@ public:
 
 	static bool is_valid(const std::string &uuid) noexcept {
 
-		bool has_braces  = false;
-		bool has_dashes  = false;
-		int  digit_index = 0;
+		bool has_braces = false;
+		bool has_dashes = false;
+		int digit_index = 0;
 
 		auto it = uuid.begin();
 
 		// first test to see if we are dealing with a brace wrapped string
 		// if so, consume the brace and note it
-		if(it != uuid.end()) {
-			if(*it == '{') {
+		if (it != uuid.end()) {
+			if (*it == '{') {
 				has_braces = true;
 				++it;
 			}
 		}
 
 		// consume digits as we go
-		while(it != uuid.end()) {
+		while (it != uuid.end()) {
 
 			// at the very least, we expect a hex digit
-			if(!isxdigit(*it)) {
+			if (!isxdigit(*it)) {
 				break;
 			}
 
 			// digits 12 and 16 have specific valid values
-			if(digit_index == 12) {
+			if (digit_index == 12) {
 				const char *p = strchr("12345", *it);
-				if(!p) {
+				if (!p) {
 					return false;
 				}
-			} else if(digit_index == 16) {
+			} else if (digit_index == 16) {
 				const char *p = strchr("89abAB", *it);
-				if(!p) {
+				if (!p) {
 					return false;
 				}
 			}
@@ -202,10 +200,10 @@ public:
 
 			// if we are at digit 8, then we test to see if there
 			// is a dash, if we see one, we want one at 12,16,20 too
-			if(it != uuid.end()) {
-				switch(digit_index) {
+			if (it != uuid.end()) {
+				switch (digit_index) {
 				case 8:
-					if(*it == '-') {
+					if (*it == '-') {
 						has_dashes = true;
 						++it;
 					}
@@ -213,8 +211,8 @@ public:
 				case 12:
 				case 16:
 				case 20:
-					if(has_dashes) {
-						if(*it == '-') {
+					if (has_dashes) {
+						if (*it == '-') {
 							++it;
 						} else {
 							return false;
@@ -222,17 +220,16 @@ public:
 					}
 					break;
 				}
-
 			}
 		}
 
 		// handle the closing brace
-		if(digit_index == 32 && has_braces) {
-			if(it == uuid.end()) {
+		if (digit_index == 32 && has_braces) {
+			if (it == uuid.end()) {
 				return false;
 			}
 
-			if(*it++ != '}') {
+			if (*it++ != '}') {
 				return false;
 			}
 		}
@@ -256,12 +253,12 @@ public:
 	bool operator<(const uuid &rhs) const noexcept {
 		return std::memcmp(v_, rhs.v_, 16) < 0;
 	}
-	
+
 public:
 	bool is_null() const noexcept {
 		return *this == uuid();
 	}
-	
+
 	bool is_valid() const noexcept {
 		const int ver = version();
 		return ver >= 1 && ver <= 5;
@@ -271,22 +268,22 @@ public:
 	std::string to_string() const noexcept {
 		char buffer[37];
 		snprintf(buffer, sizeof(buffer), "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
-			v_[0],
-			v_[1],
-			v_[2],
-			v_[3],
-			v_[4],
-			v_[5],
-			v_[6],
-			v_[7],
-			v_[8],
-			v_[9],
-			v_[10],
-			v_[11],
-			v_[12],
-			v_[13],
-			v_[14],
-			v_[15]);
+				 v_[0],
+				 v_[1],
+				 v_[2],
+				 v_[3],
+				 v_[4],
+				 v_[5],
+				 v_[6],
+				 v_[7],
+				 v_[8],
+				 v_[9],
+				 v_[10],
+				 v_[11],
+				 v_[12],
+				 v_[13],
+				 v_[14],
+				 v_[15]);
 
 		return buffer;
 	}
@@ -296,7 +293,7 @@ public:
 		return v_[index];
 	}
 
-	uint8_t& operator[](size_t index) noexcept {
+	uint8_t &operator[](size_t index) noexcept {
 		assert(index < sizeof(v_));
 		return v_[index];
 	}

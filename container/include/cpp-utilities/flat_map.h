@@ -11,12 +11,14 @@
 
 template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<std::pair<const Key, T>>>
 class flat_map {
+private:
+	using mutable_value_type = std::pair<Key, T>;
+
 public:
 	using key_type               = Key;
 	using mapped_type            = T;
-//	using value_type             = std::pair<const Key, T>;
-	using value_type             = std::pair<Key, T>;
-	using storage_type           = std::vector<value_type, Allocator>;
+	using value_type             = std::pair<const Key, T>;
+	using storage_type           = std::vector<mutable_value_type, Allocator>;
 	using size_type              = typename storage_type::size_type;
 	using difference_type        = typename storage_type::difference_type;
 	using key_compare            = Compare;
@@ -35,7 +37,8 @@ public:
 		friend class flat_map;
 
 	protected:
-		value_compare(Compare c) : comp(c) {
+		value_compare(Compare c)
+			: comp(c) {
 		}
 
 	public:
@@ -62,39 +65,49 @@ public:
 	};
 
 public:
-	flat_map() : flat_map(Compare()) {
+	flat_map()
+		: flat_map(Compare()) {
 	}
 
-	explicit flat_map(const Compare &comp, const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
+	explicit flat_map(const Compare &comp, const Allocator &alloc = Allocator())
+		: comp_(comp), storage_(alloc) {
 	}
 
 	template <class In>
-	flat_map(In first, In last, const Compare &comp = Compare(), const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
+	flat_map(In first, In last, const Compare &comp = Compare(), const Allocator &alloc = Allocator())
+		: comp_(comp), storage_(alloc) {
 		insert(first, last);
 	}
 
 	template <class In>
-	flat_map(In first, In last, const Allocator &alloc) : storage_(alloc) {
+	flat_map(In first, In last, const Allocator &alloc)
+		: storage_(alloc) {
 		insert(first, last);
 	}
 
-	flat_map(const flat_map &other) : comp_(other.comp_), storage_(other.storage_) {
+	flat_map(const flat_map &other)
+		: comp_(other.comp_), storage_(other.storage_) {
 	}
 
-	flat_map(const flat_map &other, const Allocator &alloc) : comp_(other.comp_), storage_(other.storage_, alloc) {
+	flat_map(const flat_map &other, const Allocator &alloc)
+		: comp_(other.comp_), storage_(other.storage_, alloc) {
 	}
 
-	flat_map(const flat_map &&other) : comp_(std::move(other.comp_)), storage_(std::move(other.storage_)) {
+	flat_map(const flat_map &&other)
+		: comp_(std::move(other.comp_)), storage_(std::move(other.storage_)) {
 	}
 
-	flat_map(const flat_map &&other, const Allocator &alloc) : comp_(std::move(other.comp_)), storage_(std::move(other.storage_), alloc) {
+	flat_map(const flat_map &&other, const Allocator &alloc)
+		: comp_(std::move(other.comp_)), storage_(std::move(other.storage_), alloc) {
 	}
 
-	flat_map(std::initializer_list<value_type> init, const Compare &comp = Compare(), const Allocator &alloc = Allocator()) : comp_(comp), storage_(alloc) {
+	flat_map(std::initializer_list<value_type> init, const Compare &comp = Compare(), const Allocator &alloc = Allocator())
+		: comp_(comp), storage_(alloc) {
 		insert(init);
 	}
 
-	flat_map(std::initializer_list<value_type> init, const Allocator &alloc) : comp_(Compare()), storage_(alloc) {
+	flat_map(std::initializer_list<value_type> init, const Allocator &alloc)
+		: comp_(Compare()), storage_(alloc) {
 		insert(init);
 	}
 
@@ -102,14 +115,14 @@ public:
 
 public:
 	flat_map &operator=(const flat_map &other) {
-		if(this != &other) {
+		if (this != &other) {
 			flat_map(other).swap(*this);
 		}
 		return *this;
 	}
 
 	flat_map &operator=(flat_map &&other) {
-		if(this != &other) {
+		if (this != &other) {
 			flat_map(std::move(other)).swap(*this);
 		}
 		return *this;
@@ -375,7 +388,7 @@ public:
 public:
 	// TODO:  try_emplace
 	template <class... Args>
-	std::pair<iterator, bool> emplace(Args &&... args) {
+	std::pair<iterator, bool> emplace(Args &&...args) {
 		using std::begin;
 		using std::end;
 
@@ -393,7 +406,7 @@ public:
 	}
 
 	template <class... Args>
-	std::pair<iterator, bool> emplace_hint(const_iterator hint, Args &&... args) {
+	std::pair<iterator, bool> emplace_hint(const_iterator hint, Args &&...args) {
 
 		(void)hint;
 
@@ -428,8 +441,8 @@ public:
 
 	size_type erase(const key_type &key) {
 		size_type c = 0;
-		auto r = equal_range(key);
-		auto first = r.first;
+		auto r      = equal_range(key);
+		auto first  = r.first;
 		auto second = r.second;
 		while (first != second) {
 			erase(first++);
@@ -611,7 +624,7 @@ public:
 
 private:
 	value_compare comp_;
-	storage_type  storage_;
+	storage_type storage_;
 };
 
 #endif

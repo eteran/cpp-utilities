@@ -27,12 +27,12 @@
 
 #include <bitset>
 #include <cassert>
-#include <cstring>
+#include <climits>
+#include <cpp-utilities/bitset.h>
 #include <cstddef>
 #include <cstdint>
-#include <climits>
+#include <cstring>
 #include <utility>
-#include <cpp-utilities/bitset.h>
 
 #define ARENA_ALLOCATOR_PURIFY
 
@@ -46,21 +46,23 @@ struct linked_strategy_tag {};
 template <class T, size_t Count>
 class malloc_storage {
 public:
-	malloc_storage() noexcept : p_(reinterpret_cast<T*>(malloc(sizeof(T) * Count))) {
+	malloc_storage() noexcept
+		: p_(reinterpret_cast<T *>(malloc(sizeof(T) * Count))) {
 	}
 
 	~malloc_storage() noexcept {
 		free(p_);
 	}
 
-	malloc_storage(const malloc_storage &)            = delete;
+	malloc_storage(const malloc_storage &) = delete;
 	malloc_storage &operator=(const malloc_storage &) = delete;
 
-	malloc_storage(malloc_storage &&other) noexcept : p_(std::exchange(other.p_, nullptr)) {
+	malloc_storage(malloc_storage &&other) noexcept
+		: p_(std::exchange(other.p_, nullptr)) {
 	}
 
 	malloc_storage &operator=(malloc_storage &&rhs) noexcept {
-		if(this != &rhs) {
+		if (this != &rhs) {
 			p_ = std::exchange(rhs.p_, nullptr);
 		}
 		return *this;
@@ -84,19 +86,19 @@ public:
 		freelist_.set();
 	}
 
-	arena_allocator(arena_allocator &&) noexcept            = default;
+	arena_allocator(arena_allocator &&) noexcept = default;
 	arena_allocator &operator=(arena_allocator &&) noexcept = default;
 	arena_allocator(const arena_allocator &)                = delete;
-	arena_allocator &operator=(const arena_allocator &)     = delete;
-	~arena_allocator()                                      = default;
+	arena_allocator &operator=(const arena_allocator &) = delete;
+	~arena_allocator()                                  = default;
 
 public:
 	void release(void *ptr) noexcept {
-		if(ptr) {
-			assert(ptr >= &storage_[0]     && "Attempting to release invalid pointer");
-			assert(ptr  < &storage_[Count] && "Attempting to release invalid pointer");
+		if (ptr) {
+			assert(ptr >= &storage_[0] && "Attempting to release invalid pointer");
+			assert(ptr < &storage_[Count] && "Attempting to release invalid pointer");
 
-			const int index = (reinterpret_cast<T*>(ptr) - &storage_[0]);
+			const int index = (reinterpret_cast<T *>(ptr) - &storage_[0]);
 
 			assert(!freelist_[index] && "Double free detected");
 			freelist_.flip(index);
@@ -105,7 +107,7 @@ public:
 
 	void *allocate() noexcept {
 		const int index = bitset::find_first(freelist_);
-		if(index == Count) {
+		if (index == Count) {
 			return nullptr;
 		}
 
@@ -123,7 +125,7 @@ public:
 
 private:
 	malloc_storage<T, Count> storage_;
-	std::bitset<Count>       freelist_;
+	std::bitset<Count> freelist_;
 };
 
 template <class T, size_t Count>
@@ -136,8 +138,9 @@ private:
 	};
 
 public:
-	arena_allocator() noexcept : freelist_(nullptr) {
-		for(size_t i = 0; i < Count; ++i) {
+	arena_allocator() noexcept
+		: freelist_(nullptr) {
+		for (size_t i = 0; i < Count; ++i) {
 			release(&storage_[i]);
 		}
 	}
@@ -145,11 +148,12 @@ public:
 	~arena_allocator() = default;
 
 public:
-	arena_allocator(arena_allocator &&other) : storage_(std::move(other.storage_)), freelist_(std::exchange(other.freelist_, nullptr)) {
+	arena_allocator(arena_allocator &&other)
+		: storage_(std::move(other.storage_)), freelist_(std::exchange(other.freelist_, nullptr)) {
 	}
 
 	arena_allocator &operator=(arena_allocator &&rhs) noexcept {
-		if(this != &rhs) {
+		if (this != &rhs) {
 			storage_  = std::move(rhs.storage_);
 			freelist_ = std::exchange(rhs.freelist_, nullptr);
 		}
@@ -157,14 +161,14 @@ public:
 	}
 
 private:
-	arena_allocator(const arena_allocator &)            = delete;
+	arena_allocator(const arena_allocator &) = delete;
 	arena_allocator &operator=(const arena_allocator &) = delete;
 
 public:
 	void release(void *ptr) noexcept {
-		if(ptr) {
-			assert(ptr >= &storage_[0]     && "Attempting to release invalid pointer");
-			assert(ptr  < &storage_[Count] && "Attempting to release invalid pointer");
+		if (ptr) {
+			assert(ptr >= &storage_[0] && "Attempting to release invalid pointer");
+			assert(ptr < &storage_[Count] && "Attempting to release invalid pointer");
 			assert((reinterpret_cast<uintptr_t>(ptr) & (sizeof(void *) - 1)) == 0 && "Attempting to release misaligned pointer");
 
 			node *const p = reinterpret_cast<node *>(ptr);
@@ -177,7 +181,7 @@ public:
 	}
 
 	void *allocate() noexcept {
-		if(!freelist_) {
+		if (!freelist_) {
 			return nullptr;
 		}
 
@@ -191,17 +195,17 @@ public:
 
 private:
 	malloc_storage<T, Count> storage_;
-	node*                    freelist_;
+	node *freelist_;
 };
 }
 
 template <class T, size_t Count>
-detail::arena_allocator<T, Count, detail::linked_strategy_tag> make_arena(typename std::enable_if<(sizeof(T) >= sizeof(void *)) && (Count > sizeof(size_t) * CHAR_BIT)>::type* = nullptr) {
+detail::arena_allocator<T, Count, detail::linked_strategy_tag> make_arena(typename std::enable_if<(sizeof(T) >= sizeof(void *)) && (Count > sizeof(size_t) * CHAR_BIT)>::type * = nullptr) {
 	return detail::arena_allocator<T, Count, detail::linked_strategy_tag>();
 }
 
 template <class T, size_t Count>
-detail::arena_allocator<T, Count, detail::bitset_strategy_tag> make_arena(typename std::enable_if<(sizeof(T) < sizeof(void *)) || (Count <= sizeof(size_t) * CHAR_BIT)>::type* = nullptr) {
+detail::arena_allocator<T, Count, detail::bitset_strategy_tag> make_arena(typename std::enable_if<(sizeof(T) < sizeof(void *)) || (Count <= sizeof(size_t) * CHAR_BIT)>::type * = nullptr) {
 	return detail::arena_allocator<T, Count, detail::bitset_strategy_tag>();
 }
 
