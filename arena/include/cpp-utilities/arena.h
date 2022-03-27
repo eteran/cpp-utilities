@@ -31,6 +31,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <climits>
+#include <utility>
 #include <cpp-utilities/bitset.h>
 
 #define ARENA_ALLOCATOR_PURIFY
@@ -55,13 +56,13 @@ public:
 	malloc_storage(const malloc_storage &)            = delete;
 	malloc_storage &operator=(const malloc_storage &) = delete;
 
-	malloc_storage(malloc_storage &&rhs) noexcept : p_(rhs.p_) {
-		rhs.p_ = nullptr;
+	malloc_storage(malloc_storage &&other) noexcept : p_(std::exchange(other.p_, nullptr)) {
 	}
 
 	malloc_storage &operator=(malloc_storage &&rhs) noexcept {
-		p_ = rhs.p_;
-		rhs.p_ = nullptr;
+		if(this != &rhs) {
+			p_ = std::exchange(rhs.p_, nullptr);
+		}
 		return *this;
 	}
 
@@ -83,11 +84,11 @@ public:
 		freelist_.set();
 	}
 
-	arena_allocator(arena_allocator &&other) noexcept          = default;
-	arena_allocator &operator=(arena_allocator &&rhs) noexcept = default;
-	arena_allocator(const arena_allocator &)                   = delete;
-	arena_allocator &operator=(const arena_allocator &)        = delete;
-	~arena_allocator()                                         = default;
+	arena_allocator(arena_allocator &&) noexcept            = default;
+	arena_allocator &operator=(arena_allocator &&) noexcept = default;
+	arena_allocator(const arena_allocator &)                = delete;
+	arena_allocator &operator=(const arena_allocator &)     = delete;
+	~arena_allocator()                                      = default;
 
 public:
 	void release(void *ptr) noexcept {
@@ -144,15 +145,13 @@ public:
 	~arena_allocator() = default;
 
 public:
-	arena_allocator(arena_allocator &&other) : storage_(std::move(other.storage_)), freelist_(other.freelist_) {
-		other.freelist_ = nullptr;
+	arena_allocator(arena_allocator &&other) : storage_(std::move(other.storage_)), freelist_(std::exchange(other.freelist_, nullptr)) {
 	}
 
 	arena_allocator &operator=(arena_allocator &&rhs) noexcept {
 		if(this != &rhs) {
-			storage_      = std::move(rhs.storage_);
-			freelist_     = rhs.freelist_;
-			rhs.freelist_ = nullptr;
+			storage_  = std::move(rhs.storage_);
+			freelist_ = std::exchange(rhs.freelist_, nullptr);
 		}
 		return *this;
 	}
@@ -173,8 +172,7 @@ public:
 			// TODO: in debug mode, detect a double free... not sure how this can be
 			//       done efficiently with a linked list.
 
-			p->next = freelist_;
-			freelist_ = p;
+			p->next = std::exchange(freelist_, p);
 		}
 	}
 
@@ -183,8 +181,7 @@ public:
 			return nullptr;
 		}
 
-		node *const p = freelist_;
-		freelist_ = freelist_->next;
+		node *const p = std::exchange(freelist_, freelist_->next);
 #ifdef ARENA_ALLOCATOR_PURIFY
 		// avoid information disclosure bug
 		p->next = nullptr;
