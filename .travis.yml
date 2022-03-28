@@ -4,11 +4,12 @@ addons:
   apt:
     packages:
       - libboost-dev
+      - clang-12
 
 env:
- - CC=clang CXX=clang++ STD=14
+ - CC=clang CXX=clang++-12 STD=14
  - CC=gcc CXX=g++ STD=14
- - CC=clang CXX=clang++ STD=17
+ - CC=clang CXX=clang++-12 STD=17
  - CC=gcc CXX=g++ STD=17
 
 script:
