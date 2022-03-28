@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
+find_package(Threads REQUIRED)
+
 add_executable(cpp-utilities-container-test-lru_cache
 	lru_cache.cpp
 )
@@ -8,6 +10,7 @@ target_link_libraries(cpp-utilities-container-test-lru_cache
 PRIVATE
 	cpp-utilities::container
 	cpp-utilities::defaults
+	Threads::Threads
 )
 
 add_test(

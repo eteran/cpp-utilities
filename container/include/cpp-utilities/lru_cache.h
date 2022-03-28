@@ -2,6 +2,10 @@
 #ifndef LRU_CACHE_H_
 #define LRU_CACHE_H_
 
+#if __cplusplus < 201703L
+#error "This header requires C++17 or greater"
+#endif
+
 #include <algorithm>
 #include <list>
 #include <mutex>
