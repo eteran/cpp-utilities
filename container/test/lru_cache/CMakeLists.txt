@@ -15,3 +15,4 @@ add_test(
 	COMMAND $<TARGET_FILE:cpp-utilities-container-test-lru_cache>
 )
 
+set_property(TARGET cpp-utilities-container-test-lru_cache PROPERTY CXX_STANDARD 17)
