@@ -10,11 +10,10 @@ PRIVATE
 	cpp-utilities::logger
 )
 
-set_property(TARGET cpp-utilities-logger-test PROPERTY CXX_STANDARD 20)
-
-
 add_test(
 	NAME cpp-utilities-logger-test
 	COMMAND $<TARGET_FILE:cpp-utilities-logger-test>
 )
+
+set_property(TARGET cpp-utilities-logger-test PROPERTY CXX_STANDARD 20)
 
