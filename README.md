@@ -2,7 +2,7 @@
 Miscellaneous C++11/C++14/C++17 utility classes and functions
 
 ### Hash Library
-Found in [md5.h](hash/include/cpp-utilities/md5.h) and [sha1.h](hash/include/cpp-utilities/SHA1.h)
+Found in [md5.h](hash/include/cpp-utilities/md5.h) and [sha1.h](hash/include/cpp-utilities/sha1.h)
 
 As you might expect, this is an implementation of the MD5 and SHA1 hashing algorithms. The usage of both are identical and designed for ease of use.
 
