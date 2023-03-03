@@ -110,8 +110,8 @@ public:
 		update(s);
 	}
 
-	sha1()                  = default;
-	sha1(const sha1 &other) = default;
+	sha1()                           = default;
+	sha1(const sha1 &other)          = default;
 	sha1 &operator=(const sha1 &rhs) = default;
 
 public:
@@ -129,7 +129,7 @@ public:
 		state_.length_ += 8;
 
 		if (state_.index_ == state::BlockSize) {
-			processMessageBlock(&state_, &digest_);
+			process_block(&state_, &digest_);
 		}
 
 		return *this;
@@ -163,7 +163,7 @@ public:
 				s.block_[s.index_++] = 0;
 			}
 
-			processMessageBlock(&s, &d);
+			process_block(&s, &d);
 		}
 
 		while (s.index_ < 56) {
@@ -179,13 +179,13 @@ public:
 		s.block_[61] = (s.length_ >> 16) & 0xff;
 		s.block_[62] = (s.length_ >> 8) & 0xff;
 		s.block_[63] = (s.length_) & 0xff;
-		processMessageBlock(&s, &d);
+		process_block(&s, &d);
 
 		return d;
 	}
 
 private:
-	static void processMessageBlock(state *state, digest *digest) {
+	static void process_block(state *state, digest *digest) {
 		static constexpr uint32_t K[] = {
 			0x5a827999,
 			0x6ed9eba1,

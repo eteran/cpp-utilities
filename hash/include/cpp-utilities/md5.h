@@ -138,8 +138,8 @@ public:
 		update(s);
 	}
 
-	md5()                 = default;
-	md5(const md5 &other) = default;
+	md5()                          = default;
+	md5(const md5 &other)          = default;
 	md5 &operator=(const md5 &rhs) = default;
 
 public:
