@@ -34,8 +34,8 @@
 
 class uuid {
 public:
-	uuid()             = default;
-	uuid(const uuid &) = default;
+	uuid()                        = default;
+	uuid(const uuid &)            = default;
 	uuid &operator=(const uuid &) = default;
 
 public:

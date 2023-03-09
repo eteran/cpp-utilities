@@ -71,7 +71,7 @@ static void divide(const T &numerator, const T &denominator, T &quotient, T &rem
 }
 }
 
-// convinience macro
+// convenience macro
 #define U128_C(s) uint128(#s)
 
 class uint128 : public boost::shiftable<uint128, boost::totally_ordered<uint128, boost::integer_arithmetic<uint128, boost::bitwise<uint128, boost::unit_steppable<uint128>>>>> {
@@ -324,10 +324,10 @@ public: // basic math operators
 			hi = 0;
 			lo = 0;
 		} else {
-			const unsigned int halfsize = size / 2;
+			const unsigned int half_size = size / 2;
 
-			if (n >= halfsize) {
-				n -= halfsize;
+			if (n >= half_size) {
+				n -= half_size;
 				hi = lo;
 				lo = 0;
 			}
@@ -339,7 +339,7 @@ public: // basic math operators
 				const base_type mask(~(base_type(-1) >> n));
 
 				// and add them to high half
-				hi |= (lo & mask) >> (halfsize - n);
+				hi |= (lo & mask) >> (half_size - n);
 
 				// and finally shift also low half
 				lo <<= n;
@@ -357,10 +357,10 @@ public: // basic math operators
 			hi = 0;
 			lo = 0;
 		} else {
-			const unsigned int halfsize = size / 2;
+			const unsigned int half_size = size / 2;
 
-			if (n >= halfsize) {
-				n -= halfsize;
+			if (n >= half_size) {
+				n -= half_size;
 				lo = hi;
 				hi = 0;
 			}
@@ -373,7 +373,7 @@ public: // basic math operators
 				const base_type mask(~(base_type(-1) << n));
 
 				// and add them to low qword
-				lo |= (hi & mask) << (halfsize - n);
+				lo |= (hi & mask) << (half_size - n);
 
 				// and finally shift also high half
 				hi >>= n;

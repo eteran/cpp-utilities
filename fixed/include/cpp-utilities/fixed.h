@@ -47,7 +47,7 @@ class fixed;
 namespace detail {
 
 // helper templates to make magic with types :)
-// these allow us to determine resonable types from
+// these allow us to determine reasonable types from
 // a desired size, they also let us infer the next largest type
 // from a type which is nice for the division op
 template <size_t T>
@@ -284,8 +284,8 @@ public:
 	static constexpr base_type one = base_type(1) << fractional_bits;
 
 public: // constructors
-	fixed()              = default;
-	fixed(const fixed &) = default;
+	fixed()                         = default;
+	fixed(const fixed &)            = default;
 	fixed &operator=(const fixed &) = default;
 
 	template <class Number>
@@ -538,16 +538,19 @@ CONSTEXPR14 fixed<I, F> operator+(fixed<I, F> lhs, fixed<I, F> rhs) {
 	lhs += rhs;
 	return lhs;
 }
+
 template <size_t I, size_t F>
 CONSTEXPR14 fixed<I, F> operator-(fixed<I, F> lhs, fixed<I, F> rhs) {
 	lhs -= rhs;
 	return lhs;
 }
+
 template <size_t I, size_t F>
 CONSTEXPR14 fixed<I, F> operator*(fixed<I, F> lhs, fixed<I, F> rhs) {
 	lhs *= rhs;
 	return lhs;
 }
+
 template <size_t I, size_t F>
 CONSTEXPR14 fixed<I, F> operator/(fixed<I, F> lhs, fixed<I, F> rhs) {
 	lhs /= rhs;
@@ -559,16 +562,19 @@ CONSTEXPR14 fixed<I, F> operator+(fixed<I, F> lhs, Number rhs) {
 	lhs += fixed<I, F>(rhs);
 	return lhs;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 CONSTEXPR14 fixed<I, F> operator-(fixed<I, F> lhs, Number rhs) {
 	lhs -= fixed<I, F>(rhs);
 	return lhs;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 CONSTEXPR14 fixed<I, F> operator*(fixed<I, F> lhs, Number rhs) {
 	lhs *= fixed<I, F>(rhs);
 	return lhs;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 CONSTEXPR14 fixed<I, F> operator/(fixed<I, F> lhs, Number rhs) {
 	lhs /= fixed<I, F>(rhs);
@@ -581,18 +587,21 @@ CONSTEXPR14 fixed<I, F> operator+(Number lhs, fixed<I, F> rhs) {
 	tmp += rhs;
 	return tmp;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 CONSTEXPR14 fixed<I, F> operator-(Number lhs, fixed<I, F> rhs) {
 	fixed<I, F> tmp(lhs);
 	tmp -= rhs;
 	return tmp;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 CONSTEXPR14 fixed<I, F> operator*(Number lhs, fixed<I, F> rhs) {
 	fixed<I, F> tmp(lhs);
 	tmp *= rhs;
 	return tmp;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 CONSTEXPR14 fixed<I, F> operator/(Number lhs, fixed<I, F> rhs) {
 	fixed<I, F> tmp(lhs);
@@ -606,6 +615,7 @@ CONSTEXPR14 fixed<I, F> operator<<(fixed<I, F> lhs, Integer rhs) {
 	lhs <<= rhs;
 	return lhs;
 }
+
 template <size_t I, size_t F, class Integer, class = typename std::enable_if<std::is_integral<Integer>::value>::type>
 CONSTEXPR14 fixed<I, F> operator>>(fixed<I, F> lhs, Integer rhs) {
 	lhs >>= rhs;
@@ -617,22 +627,27 @@ template <size_t I, size_t F, class Number, class = typename std::enable_if<std:
 constexpr bool operator>(fixed<I, F> lhs, Number rhs) {
 	return lhs > fixed<I, F>(rhs);
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator<(fixed<I, F> lhs, Number rhs) {
 	return lhs < fixed<I, F>(rhs);
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator>=(fixed<I, F> lhs, Number rhs) {
 	return lhs >= fixed<I, F>(rhs);
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator<=(fixed<I, F> lhs, Number rhs) {
 	return lhs <= fixed<I, F>(rhs);
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator==(fixed<I, F> lhs, Number rhs) {
 	return lhs == fixed<I, F>(rhs);
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator!=(fixed<I, F> lhs, Number rhs) {
 	return lhs != fixed<I, F>(rhs);
@@ -642,26 +657,32 @@ template <size_t I, size_t F, class Number, class = typename std::enable_if<std:
 constexpr bool operator>(Number lhs, fixed<I, F> rhs) {
 	return fixed<I, F>(lhs) > rhs;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator<(Number lhs, fixed<I, F> rhs) {
 	return fixed<I, F>(lhs) < rhs;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator>=(Number lhs, fixed<I, F> rhs) {
 	return fixed<I, F>(lhs) >= rhs;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator<=(Number lhs, fixed<I, F> rhs) {
 	return fixed<I, F>(lhs) <= rhs;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator==(Number lhs, fixed<I, F> rhs) {
 	return fixed<I, F>(lhs) == rhs;
 }
+
 template <size_t I, size_t F, class Number, class = typename std::enable_if<std::is_arithmetic<Number>::value>::type>
 constexpr bool operator!=(Number lhs, fixed<I, F> rhs) {
 	return fixed<I, F>(lhs) != rhs;
 }
+
 }
 
 #undef CONSTEXPR14

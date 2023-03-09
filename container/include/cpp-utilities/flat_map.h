@@ -47,7 +47,7 @@ public:
 		}
 
 	public:
-		// for convinience
+		// for convenience
 		bool operator()(const key_type &lhs, const value_type &rhs) const {
 			return comp(lhs, rhs.first);
 		}

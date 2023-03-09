@@ -48,7 +48,7 @@ public:
 		: value_(value) {
 	}
 
-	const_iterator(const const_iterator &) = default;
+	const_iterator(const const_iterator &)            = default;
 	const_iterator &operator=(const const_iterator &) = default;
 
 public:

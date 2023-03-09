@@ -54,7 +54,7 @@ public:
 		free(p_);
 	}
 
-	malloc_storage(const malloc_storage &) = delete;
+	malloc_storage(const malloc_storage &)            = delete;
 	malloc_storage &operator=(const malloc_storage &) = delete;
 
 	malloc_storage(malloc_storage &&other) noexcept
@@ -86,11 +86,11 @@ public:
 		freelist_.set();
 	}
 
-	arena_allocator(arena_allocator &&) noexcept = default;
+	arena_allocator(arena_allocator &&) noexcept            = default;
 	arena_allocator &operator=(arena_allocator &&) noexcept = default;
 	arena_allocator(const arena_allocator &)                = delete;
-	arena_allocator &operator=(const arena_allocator &) = delete;
-	~arena_allocator()                                  = default;
+	arena_allocator &operator=(const arena_allocator &)     = delete;
+	~arena_allocator()                                      = default;
 
 public:
 	void release(void *ptr) noexcept {
@@ -161,7 +161,7 @@ public:
 	}
 
 private:
-	arena_allocator(const arena_allocator &) = delete;
+	arena_allocator(const arena_allocator &)            = delete;
 	arena_allocator &operator=(const arena_allocator &) = delete;
 
 public:
