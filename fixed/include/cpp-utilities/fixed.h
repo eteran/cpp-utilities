@@ -147,7 +147,6 @@ CONSTEXPR14 fixed<I, F> divide(fixed<I, F> numerator, fixed<I, F> denominator, f
 template <size_t I, size_t F>
 CONSTEXPR14 fixed<I, F> divide(fixed<I, F> numerator, fixed<I, F> denominator, fixed<I, F> &remainder, typename std::enable_if<!type_from_size<I + F>::next_size::is_specialized>::type * = nullptr) {
 
-	using base_type     = typename fixed<I, F>::base_type;
 	using unsigned_type = typename fixed<I, F>::unsigned_type;
 
 	constexpr int bits = fixed<I, F>::total_bits;
