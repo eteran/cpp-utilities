@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        # @see https://stackoverflow.com/a/68940067
+        compiler: [{cc: gcc, cxx: g++}]
+        std: [14, 17]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get -y update && sudo apt-get -y install \
+          libboost-all-dev
+
+    - name: Configure
+      run: |
+        CC=${{ matrix.compiler.cc }} CXX=${{ matrix.compiler.cxx }} cmake -DCMAKE_CXX_STANDARD=${{ matrix.std }} .
+
+    - name: Build
+      run: |
+        make
+
+    - name: Test
+      run: |
+        make test
+
