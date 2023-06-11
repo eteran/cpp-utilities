@@ -10,14 +10,15 @@ jobs:
     strategy:
       matrix:
         # @see https://stackoverflow.com/a/68940067
-        compiler: [{cc: gcc, cxx: g++}]
+        compiler: [{cc: clang-15, cxx: clang++-15}, {cc: gcc, cxx: g++}]
         std: [14, 17]
     steps:
     - uses: actions/checkout@v3
 
     - name: Install dependencies
       run: |
-        sudo apt-get -y update && sudo apt-get -y install \
+        sudo apt-get -y update && sudo apt-get -y install	\
+          clang-15						\
           libboost-all-dev
 
     - name: Configure
