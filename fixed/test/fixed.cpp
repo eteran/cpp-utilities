@@ -1,6 +1,7 @@
 #include <cpp-utilities/fixed.h>
 #include <iostream>
 #include <cassert>
+#include <cstdlib>
 
 using fixed = numeric::fixed<16, 16>;
 
@@ -62,4 +63,6 @@ int main() {
 
 	// conversion test
 	assert(fixed(0x8000).to_uint() == 0x8000);
+
+	return EXIT_SUCCESS;
 }
