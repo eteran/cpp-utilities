@@ -149,7 +149,11 @@ public:
 		swap(state_, other.state_);
 	}
 
-	void clear();
+	void clear() {
+		digest_ = digest();
+		state_  = state();
+	}
+
 	digest finalize() const {
 		// make copies so this isn't a mutating operation
 		state s  = state_;

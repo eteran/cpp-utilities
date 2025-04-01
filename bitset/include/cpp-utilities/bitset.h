@@ -26,6 +26,7 @@
 #define UTILITY_BITSET_HPP_
 
 #include <bitset>
+#include <cstdint>
 
 namespace bitset {
 
